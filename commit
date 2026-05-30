@@ -1,6 +1,10 @@
 #!/bin/bash
 
 #####ISO-PUSH#####
+
+sudo rm -rf /home/$USER/git/anarchy-iso/work
+sudo rm -rf /home/$USER/git/anarchy-iso/out
+
 read -rp "Commit message: " msg
 git add .
 git commit -m "$msg"
