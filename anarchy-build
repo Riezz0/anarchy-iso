@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#####ISO-BUILD#####
+sudo rm -rf /home/$USER/Documents/anarchy/work/
+sudo rm -rf /home/$USER/Documents/anarchy/out/
+
+echo "##################################"
+echo "           BUILDING ISO           "
+echo "##################################"
+
+sudo mkarchiso -v .
+
+echo "##################################"
+echo "             ISO BUILT            "
+echo "##################################"
+
+#####ISO-PUSH#####
+read -rp "Commit message: " msg
+git add .
+git commit -m "$msg"
+git push
