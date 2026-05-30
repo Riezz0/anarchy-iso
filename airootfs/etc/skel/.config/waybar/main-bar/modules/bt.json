@@ -1,0 +1,6 @@
+//Bluetooth///////////////////////////////////////////////////////////////////////////////////////////////|
+{"bluetooth": {"format": "󰂲", "format-disabled": "󰂲", "format-off": "󰂲", "format-connected":         /////|
+" {device_alias}", "format-connected-battery": "{device_battery_percentage}% {device_alias}",       /////| 
+"on-click": "blueman-manager"}},                                                                     /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+

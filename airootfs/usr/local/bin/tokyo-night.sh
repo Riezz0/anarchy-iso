@@ -1,0 +1,1 @@
+../share/themes/tokyo-night/tokyo-night.sh

@@ -1,0 +1,21 @@
+//Modules/////////////////////////////////////////////////////|
+{"include": [                                            /////|                                                           
+"~/.config/waybar/main-bar/modules/apps1.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/clock.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/bt.json",             /////|                                                         
+"~/.config/waybar/main-bar/modules/arch.json",           /////|                                                         
+"~/.config/waybar/main-bar/modules/audio.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/games.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/net.json",            /////|                                                         
+"~/.config/waybar/main-bar/modules/power.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/quran.json",          /////|                                                         
+"~/.config/waybar/main-bar/modules/salaat.json",         /////|                                                         
+"~/.config/waybar/main-bar/modules/sunnah.json",         /////|                                                         
+"~/.config/waybar/main-bar/modules/swaync.json",         /////|                                                         
+"~/.config/waybar/main-bar/modules/themer.json",         /////|                                                         
+"~/.config/waybar/main-bar/modules/tray.json",           /////|                                                         
+"~/.config/waybar/main-bar/modules/gpu-temp.json",       /////|                                                         
+"~/.config/waybar/main-bar/modules/cpu-temp.json",       /////|                                                         
+"~/.config/waybar/main-bar/modules/wf-recorder.json",    /////|                                                         
+"~/.config/waybar/main-bar/modules/workspaces.json",],}, /////|
+//////////////////////////////////////////////////////////////|

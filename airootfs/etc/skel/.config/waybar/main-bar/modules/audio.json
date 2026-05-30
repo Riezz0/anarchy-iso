@@ -1,0 +1,6 @@
+//Audio///////////////////////////////////////////////////////////////////////////////////////////////////|
+{"pulseaudio": {"format": "VOL:{volume}%", "format-muted": "Audio Muted", "tooltip": true,           /////|
+"on-click": "bash ~/.config/scripts/pulse.sh",                                                       /////|
+"tooltip-format": "Audio\nLeft Click To Open PulseMixer\nLeft Click Again To Close" }},              /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+

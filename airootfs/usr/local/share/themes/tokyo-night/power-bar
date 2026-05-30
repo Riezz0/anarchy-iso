@@ -1,0 +1,91 @@
+@import "../../../.cache/wal/colors-waybar.css";
+
+* {
+    font-family: MesloLGL Nerd Font Propo;
+    font-size: 13px;
+}
+
+window#waybar {
+  background-color: alpha(@background, 0.4);
+  color: @foreground;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  border-radius: 10px 10px 10px 10px;
+  transition-duration: .5s;
+  border-bottom: 2px solid @color8;
+  border-top: 2px solid @color8;
+  border-left: 2px solid @color8;
+  border-right: 2px solid @color8;
+
+}
+
+#custom-shutdown{
+  border-radius: 10px;
+  background-color: alpha(@background, 0.65);
+  color: @color1;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-bottom: 0px;
+  padding-top: 2px;
+  padding-left: 45px;
+  padding-right: 45px;
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.6);
+  border-bottom: 2px solid @color1;
+  border-top: 2px solid @color1;
+  border-left: 2px solid @color1;
+  border-right: 2px solid @color1;
+}
+
+#custom-restart{
+  border-radius: 10px;
+  background-color: alpha(@background, 0.65);
+  color: @color2;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-bottom: 0px;
+  padding-top: 2px;
+  padding-left: 45px;
+  padding-right: 45px;
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.6);
+  border-bottom: 2px solid @color2;
+  border-top: 2px solid @color2;
+  border-left: 2px solid @color2;
+  border-right: 2px solid @color2;
+}
+
+#custom-lock{
+  border-radius: 10px;
+  background-color: alpha(@background, 0.65);
+  color: @color3;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-bottom: 0px;
+  padding-top: 2px;
+  padding-left: 45px;
+  padding-right: 45px;
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.6);
+  border-bottom: 2px solid @color3;
+  border-top: 2px solid @color3;
+  border-left: 2px solid @color3;
+  border-right: 2px solid @color3;
+}
+
+tooltip label {
+  color: @foreground;                   
+  font-family: "MesloLGL Nerd Font";    
+  font-size: 12px;
+  padding: 0px;
+}
+
+tooltip {
+  background: alpha(@background, 1); 
+  border: 2px solid @color8;        
+  border-radius: 10px;               
+}
+

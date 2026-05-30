@@ -1,0 +1,6 @@
+//Modules//////////////////////////////////////////////////////|
+{"include": [                                             /////|                                                           
+"~/.config/waybar/power-bar/modules/shutdown.json",       /////|
+"~/.config/waybar/power-bar/modules/restart.json",        /////|
+"~/.config/waybar/power-bar/modules/lock.json",],},       /////|
+///////////////////////////////////////////////////////////////|

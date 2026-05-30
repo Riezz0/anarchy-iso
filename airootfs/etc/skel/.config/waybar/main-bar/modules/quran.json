@@ -1,0 +1,6 @@
+//Quran///////////////////////////////////////////////////////////////////////////////////////////////////|
+{"custom/quran": {"format": "<span font='20px'></span>",                                            /////|
+"on-click": "bash ~/.config/scripts/webapps/quranwbw.sh", "tooltip": true,                           /////|
+"tooltip-format": "Quran\nLeft Click To Open\nLeft Click Again To Close" }},                         /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+

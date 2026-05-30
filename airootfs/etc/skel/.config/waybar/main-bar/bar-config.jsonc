@@ -1,0 +1,19 @@
+//General Settings////////////////////////////////////////////////////////////////////////////////////////|
+{"height": 30, "spacing": 4,                                                                         /////|  
+"margin-top": 0,                                                                                     /////|
+"output": "DP-2",                                                                                    /////|
+"margin-bottom": 0,                                                                                  /////|
+"layer": "bottom",                                                                                   /////|
+"margin-left": 5,                                                                                    /////|
+"margin-top": 5,                                                                                     /////|
+"margin-right": 5,                                                                                   /////|
+"include": ["~/.config/waybar/main-bar/modules/modules.json"],                                       /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//Modules Alignment///////////////////////////////////////////////////////////////////////////////////////|
+"modules-left": ["custom/arch","hyprland/workspaces","group/apps","custom/games",                    /////|
+"custom/notification","custom/gpu-temp","custom/cpu-temp","bluetooth"],                              /////|
+"modules-center": ["custom/quran","custom/salaat","custom/sunnah"],                                  /////|
+"modules-right": ["custom/themer","custom/recorder","network","pulseaudio",                          /////|
+"clock","tray","custom/power"]}                                                                      /////|                                                                  /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|

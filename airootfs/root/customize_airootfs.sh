@@ -8,3 +8,4 @@ chown -R liveuser:liveuser /home/liveuser
 
 systemctl enable NetworkManager
 systemctl enable sddm
+

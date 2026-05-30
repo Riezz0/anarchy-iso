@@ -1,0 +1,12 @@
+//Workspaces//////////////////////////////////////////////////////////////////////////////////////////////|
+{"hyprland/workspaces": {                                                                            /////| 
+"disable-scroll": false,"all-outputs": true,                                                         /////|
+"show-special": true,                                                                                /////|
+"warp-on-scroll": false,"format": "{icon}","format-icons": {                                         /////|
+"active": "<span font='20px'>󰮯</span>",                                                              /////|
+"default": "<span font='15px'></span>",                                                             /////|
+"special": "<span font='20px'></span>",                                                             /////|
+"urgent": "<span font='20px'>󰊠</span>"}}},                                                           /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+

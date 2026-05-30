@@ -1,0 +1,36 @@
+//Grouped-Apps1///////////////////////////////////////////////////////////////////////////////////////////|
+{"group/apps": {"orientation": "inherit",                                                            /////|
+"drawer": {"transition-duration": 500, "transition-left-to-right": true,                             /////|
+"children-class": "drawer-modules"},                                                                 /////|
+"modules": ["custom/drawer1","custom/discord","custom/whatsapp","custom/protonm","custom/gmail"],},  /////|                                                                /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//Drawer1/////////////////////////////////////////////////////////////////////////////////////////////////|
+"custom/drawer1": {"format": "<span font='20px'>󰀻</span>", "tooltip": false},                        /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//Discord/////////////////////////////////////////////////////////////////////////////////////////////////|
+"custom/discord": {"format": "    ", "tooltip": false,                                               /////|
+"on-click": "bash ~/.config/scripts/dc.sh", "tooltip": true,                                         /////|
+"tooltip-format": "Discord\nLeft Click To Open\nLeft Click Again To Close" },                        /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//WhatsApp////////////////////////////////////////////////////////////////////////////////////////////////|
+"custom/whatsapp": {"format": "    ", "tooltip": false,                                              /////|
+"on-click": "bash ~/.config/scripts/webapps/whatsapp.sh", "tooltip": true,                           /////|
+"tooltip-format": "WhatsApp\nLeft Click To Open\nLeft Click Again To Close" },                       /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//ProtonMail//////////////////////////////////////////////////////////////////////////////////////////////|
+"custom/protonm": {"format": "    ", "tooltip": false,                                               /////|
+"on-click": "bash ~/.config/scripts/webapps/protonmail.sh", "tooltip": true,                         /////|
+"tooltip-format": "Proton Mail\nLeft Click To Open\nLeft Click Again To Close" },                    /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+//GMail///////////////////////////////////////////////////////////////////////////////////////////////////|
+"custom/gmail": {"format": "    ", "tooltip": false,                                                 /////|
+"on-click": "bash ~/.config/scripts/webapps/gmail.sh", "tooltip": true,                              /////|
+"tooltip-format": "G-Mail\nLeft Click To Open\nLeft Click Again To Close" }},                        /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+
+

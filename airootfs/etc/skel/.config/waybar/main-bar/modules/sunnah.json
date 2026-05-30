@@ -1,0 +1,6 @@
+//Sunnah//////////////////////////////////////////////////////////////////////////////////////////////////|
+{"custom/sunnah": {"format": "<span font='20px'>󱛉</span>", "tooltip": false,                         /////|
+"on-click": "bash ~/.config/scripts/webapps/sunnah.sh", "tooltip": true,                             /////|
+"tooltip-format": "The Sunnah\nLeft Click To Open\nLeft Click Again To Close" }},                    /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+

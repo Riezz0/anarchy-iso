@@ -1,0 +1,6 @@
+//Themer//////////////////////////////////////////////////////////////////////////////////////////////////|
+{"custom/themer": {"format": "<span font='20px'></span>",                                           /////|
+"on-click": "bash ~/.config/scripts/themer.sh", "tooltip": true,                                     /////|
+"tooltip-format": "Theme Select\nLeft Click To Open\nLeft Click Again To Close" }},                  /////|
+//////////////////////////////////////////////////////////////////////////////////////////////////////////|
+

@@ -24,4 +24,11 @@ file_permissions=(
   ["/usr/local/bin/Installation_guide"]="0:0:755"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
   ["/etc/sudoers.d/g_wheel"]="0:0:755"
+  ##########CUSTOM##########
+  ["/usr/local/bin/awww.sh"]="0:0:755"
+  ["/usr/local/bin/waybar.sh"]="0:0:755"
+  ["/usr/local/bin/welcome.sh"]="0:0:755"
+  ["/usr/local/bin/tokyo-night.sh"]="0:0:755"
+  ["/home/$USER/.config/rofi/launcher/launcher.sh"]="0:0:755"
+  ["/usr/local/share/themes/tokyo-night/tokyo-night.sh"]="0:0:755"
 )
