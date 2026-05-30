@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#####ISO-PUSH#####
+read -rp "Commit message: " msg
+git add .
+git commit -m "$msg"
+git push
+
+echo "##################################"
+echo "      ISO SUCCESSFULLY PUSHED     "
+echo "##################################"

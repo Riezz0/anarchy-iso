@@ -128,7 +128,7 @@ xfsprogs
 xl2tpd
 zsh
 
-#####HYPRLAND#####
+#####HYPRLAND-BASICS#####
 hyprland 
 uwsm
 sddm
@@ -136,3 +136,4 @@ qt6-wayland
 qt5-wayland
 xdg-desktop-portal-hyprland
 polkit-kde-agent
+kitty
