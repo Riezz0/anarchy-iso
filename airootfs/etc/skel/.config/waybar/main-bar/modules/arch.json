@@ -1,6 +1,6 @@
 //Arch-Logo///////////////////////////////////////////////////////////////////////////////////////////////|
-{"custom/arch": {"format": " ", "tooltip": true,                            /////|
-"on-click": "bash ~/.config/scripts/binds.sh","tooltip-format":                                      /////|
+{"custom/arch": {"format": " ", "tooltip": true,                                                     /////|
+"on-click": "bash /usr/local/bin/binds.sh","tooltip-format":                                         /////|
 "Check Binds\nLeft Click To Open\nLeft Click Again To Close"}} ,                                     /////|
 //////////////////////////////////////////////////////////////////////////////////////////////////////////|
 

@@ -1,0 +1,8 @@
+# /etc/default/useradd template for Archiso liveuser creation
+GRPS=users
+SHELL=/usr/bin/zsh
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no

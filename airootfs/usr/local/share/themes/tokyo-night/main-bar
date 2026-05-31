@@ -1,8 +1,8 @@
 @import "../../../.cache/wal/colors-waybar.css";
 
 * {
-    font-family: MesloLGL Nerd Font Propo;
-    font-size: 12px;
+    font-family: JetBrainsMono Nerd Font Propo;
+    font-size: 13px;
 }
 
 window#waybar {
@@ -25,7 +25,7 @@ button:hover {
 }
 
 #custom-arch {
-  background-image: url('../icons/cachyos.svg');
+  background-image: url('../icons/arch.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 30px;

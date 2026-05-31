@@ -1,4 +1,4 @@
 //Network/////////////////////////////////////////////////////////////////////////////////////////////////|
 {"network": {"format-ethernet": "{ipaddr}", "tooltip": false,"format-disconnected": "No Internet",   /////|
-"on-click": "~/.config/scripts/netman.sh"}},                                                         /////|
+"on-click": "bash /usr/local/bin/netman.sh"}},                                                       /////|
 //////////////////////////////////////////////////////////////////////////////////////////////////////////|

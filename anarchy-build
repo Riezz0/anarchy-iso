@@ -2,7 +2,6 @@
 
 #####ISO-BUILD#####
 sudo rm -rf /home/$USER/git/anarchy-iso/work/
-sudo rm -rf /home/$USER/git/anarchy-iso/out/
 
 echo "##################################"
 echo "           BUILDING ISO           "

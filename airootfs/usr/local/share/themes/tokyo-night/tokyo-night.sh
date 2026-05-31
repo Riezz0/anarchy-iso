@@ -10,10 +10,10 @@
 USER_HOME="$HOME"
 THEME_NAME="tokyo-night"
 THEME_DISPLAY="Tokyo Night Dark Theme"
-THEME_DIR="$USER_HOME/.config/.hypr-themes/$THEME_NAME"
+THEME_DIR="/usr/local/share/themes/$THEME_NAME"
 
 # Wallpaper
-WALL="$USER_HOME/.config/.hypr-themes/$THEME_NAME/thumbnail.png"
+WALL="/usr/local/share/themes/$THEME_NAME/thumbnail.png"
 
 # Pywal
 PYWAL="$USER_HOME/.config/pywal/themes/active.json"
@@ -31,7 +31,7 @@ KVANTUM_DIR="$USER_HOME/.config/Kvantum/pywal"
 #------------------------#
 awww img "$WALL" --transition-fps 144 --transition-step 255 --transition-type random
 cp -r "$WALL" "/home/$USER/.config/hypr/lock.png"
-cp -r "$WALL" "/home/$USER/.config/wallpapers/Wall.png"
+cp -r "$WALL" "/usr/local/share/wallpapers/Wall.png"
 
 #------------------------#
 # SET COLOR SCHEME
@@ -54,7 +54,6 @@ cp -r "$THEME_DIR/main-bar" "$USER_HOME/.config/waybar/main-bar/bar-style.css"
 cp -r "$THEME_DIR/power-bar" "$USER_HOME/.config/waybar/power-bar/power-bar-style.css"
 cp -r "$THEME_DIR/theme-bar" "$USER_HOME/.config/waybar/power-bar/theme-bar-style.css"
 cp -r "$THEME_DIR/rofi" "$USER_HOME/.config/rofi/launcher/colors.rasi"
-cp -r "$THEME_DIR/wf-recorder-toggle.sh" "$USER_HOME/.config/scripts/wf-recorder-toggle.sh"
 cp -f "${HOME}"/.cache/wal/pywal.json "${HOME}"/.config/presets/user/pywal.json
 cp -r $HOME/.cache/wal/colors-discord.css $HOME/.config/vesktop/themes/pywal-vencord.theme.css
 #--------------------------#
@@ -104,11 +103,11 @@ hyprctl reload
 kill -SIGUSR1 $(pidof kitty)
 pywalfox update
 swaync-client -rs
-bash /home/$USER/.config/scripts/waybar.sh
+
 
 #------------------------#
 # NOTIFICATION
 #------------------------#
 swaync-client --hide-all
-notify-send "$THEME_DISPLAY Loaded"
-
+pywalfox update
+bash /usr/local/bin/waybar.sh

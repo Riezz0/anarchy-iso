@@ -1,0 +1,11 @@
+{
+  "policies": {
+    "ExtensionSettings": {
+      "pywalfox@frewacom.org": {
+        "installation_mode": "force_installed",
+        "install_url": "file:///usr/share/firefox-extensions/pywalfox.xpi",
+        "default_area": "navbar"
+      }
+    }
+  }
+}

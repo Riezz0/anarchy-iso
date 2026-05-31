@@ -1,7 +1,6 @@
 //General Settings////////////////////////////////////////////////////////////////////////////////////////|
-{"height": 30, "spacing": 4,                                                                         /////|  
+{"height": 55, "spacing": 4,                                                                         /////|  
 "margin-top": 0,                                                                                     /////|
-"output": "DP-2",                                                                                    /////|
 "margin-bottom": 0,                                                                                  /////|
 "layer": "bottom",                                                                                   /////|
 "margin-left": 5,                                                                                    /////|
@@ -11,9 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////|
 
 //Modules Alignment///////////////////////////////////////////////////////////////////////////////////////|
-"modules-left": ["custom/arch","hyprland/workspaces","group/apps","custom/games",                    /////|
-"custom/notification","custom/gpu-temp","custom/cpu-temp","bluetooth"],                              /////|
-"modules-center": ["custom/quran","custom/salaat","custom/sunnah"],                                  /////|
-"modules-right": ["custom/themer","custom/recorder","network","pulseaudio",                          /////|
-"clock","tray","custom/power"]}                                                                      /////|                                                                  /////|
+"modules-left": ["custom/arch","hyprland/workspaces","custom/notification","bluetooth"],             /////|                           /////|
+"modules-center": ["custom/salaat"],                                                                 /////|
+"modules-right": ["network","pulseaudio","clock","tray","custom/power"]}                             /////|                                                                     /////|                                                                  /////|
 //////////////////////////////////////////////////////////////////////////////////////////////////////////|
