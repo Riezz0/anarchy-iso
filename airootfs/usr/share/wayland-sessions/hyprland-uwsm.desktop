@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Hyprland (UWSM)
+Comment=Hyprland managed by UWSM
+Exec=/usr/bin/uwsm start hyprland
+Type=Application
+DesktopNames=Hyprland
