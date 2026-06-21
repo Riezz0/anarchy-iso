@@ -36,7 +36,6 @@ fsarchiver
 gpart
 gpm
 gptfdisk
-grml-zsh-config
 grub
 hdparm
 hyprland
@@ -137,3 +136,6 @@ xfsprogs
 xl2tpd
 xorg-xwayland
 zsh
+kitty
+nautilus
+firefox
