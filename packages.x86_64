@@ -184,7 +184,6 @@ anarchy-installer
 gum
 figlet
 gtk2
-plymouth
 inter-font
 anarchy-installer
 awww
@@ -205,7 +204,6 @@ nwg-look
 oh-my-zsh-git
 pipewire-audio
 pipewire-pulse
-plymouth
 pyprland
 python-anyascii
 python-cssutils
