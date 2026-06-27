@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WORK_DIR="$(pwd)/work"
-OUT_DIR="$(pwd)/out"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+WORK_DIR="${SCRIPT_DIR}/work"
+OUT_DIR="${SCRIPT_DIR}/out"
 
 echo "==> Cleaning previous build artifacts..."
 sudo rm -rf "${WORK_DIR}" "${OUT_DIR}"
 
 echo "==> Building ISO..."
-sudo mkarchiso -v -w "${WORK_DIR}" -o "${OUT_DIR}" "$(pwd)"
+sudo mkarchiso -v -w "${WORK_DIR}" -o "${OUT_DIR}" "${SCRIPT_DIR}"
 
-echo "==> Cleaning work directory..."
+echo "==> Cleaning up..."
 sudo rm -rf "${WORK_DIR}"
 
 echo "==> Build complete. Output in ${OUT_DIR}/"
