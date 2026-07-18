@@ -32,6 +32,7 @@ file_permissions=(
   ["/usr/local/bin/wf-recorder-toggle.sh "]="0:0:755"
   ["/etc/skel/.config/rofi/launcher/launcher.sh"]="0:0:755"
   ["/etc/skel/.config/.hypr-themes/tokyo-night/tokyo-night.sh"]="0:0:755"
+  ["/etc/skel/.local/share/themes/hypr-theme-active.sh"]="0:0:755"
   ["/etc/skel/.config/quickshell/scripts/wf-recorder.sh"]="0:0:755"
   
 )

@@ -522,7 +522,7 @@ Rectangle {
                 Rectangle {
                     id: sessionPill
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 180
+                    Layout.preferredWidth: 280
                     Layout.preferredHeight: 36
                     color: (sessionClickArea.pressed || sessionPopup.opened) ? surfaceVariantColor : surfaceColor
                     radius: 18
@@ -556,6 +556,7 @@ Rectangle {
                             color: "white"
                             font.pixelSize: 13
                             font.weight: Font.Medium
+                            elide: Text.ElideRight
                         }
                     }
 
