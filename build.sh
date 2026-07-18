@@ -6,7 +6,7 @@ WORK_DIR="${SCRIPT_DIR}/work"
 OUT_DIR="${SCRIPT_DIR}/out"
 
 echo "==> Cleaning previous build artifacts..."
-sudo rm -rf "${WORK_DIR}" "${OUT_DIR}"
+sudo rm -rf "${WORK_DIR}"
 
 echo "==> Building ISO..."
 sudo mkarchiso -v -w "${WORK_DIR}" -o "${OUT_DIR}" "${SCRIPT_DIR}"

@@ -1,0 +1,56 @@
+default partial alphanumeric_keys
+xkb_symbols "basic" {
+
+    name[Group1]= "Arabic (Phonetic Custom)";
+
+    // Number Row (0-9)
+    key <AE01> { [ U0661, 1 ] }; // 1 -> ١
+    key <AE02> { [ U0662, 2 ] }; // 2 -> ٢
+    key <AE03> { [ U0663, 3 ] }; // 3 -> ٣
+    key <AE04> { [ U0664, 4 ] }; // 4 -> ٤
+    key <AE05> { [ U0665, 5 ] }; // 5 -> ٥
+    key <AE06> { [ U0666, 6 ] }; // 6 -> ٦
+    key <AE07> { [ U0667, 7 ] }; // 7 -> ٧
+    key <AE08> { [ U0668, 8 ] }; // 8 -> ٨
+    key <AE09> { [ U0669, 9 ] }; // 9 -> ٩
+    key <AE10> { [ U0660, 0 ] }; // 0 -> ٠
+  
+    // Top Left & Backslash
+    key <TLDE> { [ U0630, U0651 ] }; // ` -> Thal (ذ), Shift: Shadda (ّ)
+    key <BKSL> { [ U0651, U007c ] }; // \ -> Shadda (ّ), Shift: Pipe (|)
+
+    // Row D (Top: Q-P)
+    key <AD01> { [ U0642, U0624 ] }; // Q -> Qaf (ق), Shift: Waw Hamza (ؤ)
+    key <AD02> { [ U0648, U0626 ] }; // W -> Waw (و), Shift: Yeh Hamza (ئ)
+    key <AD03> { [ U0634, U00f7 ] }; // E -> Sheen (ش), Shift: Division (÷)
+    key <AD04> { [ U0631, U00d7 ] }; // R -> Reh (ر), Shift: Multiplication (×)
+    key <AD05> { [ U062a, U0637 ] }; // T -> Teh (ت), Shift: Tah (ط)
+    key <AD06> { [ U064a, U0649 ] }; // Y -> Dotted Yeh (ي), Shift: Alef Maksura (ى)
+    key <AD07> { [ U0621, U0624 ] }; // U -> Hamza (ء), Shift: Waw Hamza (ؤ)
+    key <AD08> { [ U0625, U0622 ] }; // I -> Alef Hamza Below (إ), Shift: Alef Madda (آ)
+    key <AD09> { [ U0629, U0623 ] }; // O -> Teh Marbuta (ة), Shift: Alef Hamza Above (أ)
+    key <AD10> { [ U0627, U0671 ] }; // P -> Alef (ا), Shift -> Hamzatul Wasl (ٱ)
+
+    // Row C (Home: A-L)
+    key <AC01> { [ U0627, U0639 ] }; // A -> Alef (ا), Shift: Ayn (ع)
+    key <AC02> { [ U0633, U0635 ] }; // S -> Seen (س), Shift: Sad (ص)
+    key <AC03> { [ U062f, U0636 ] }; // D -> Dal (د), Shift: Dad (ض)
+    key <AC04> { [ U0641, U002d ] }; // F -> Feh (ف), Shift: Minus (-)
+    key <AC05> { [ U063a, U0652 ] }; // G -> Ghain (غ), Shift: Sukun (ْ)
+    key <AC06> { [ U0647, U062d ] }; // H -> Heh (ه), Shift: Hah (ح)
+    key <AC07> { [ U062c, U0027 ] }; // J -> Jeem (ج), Shift: Quote (')
+    key <AC08> { [ U0643, U062e ] }; // K -> Kaf (ك), Shift: Khah (خ)
+    key <AC09> { [ U0644, U0624 ] }; // L -> Lam (ل), Shift: Waw Hamza (ؤ)
+    key <AC10> { [ UFEFB, UFEF5 ] }; // ; key -> لا (Normal), Shift -> لآ (Madda)
+    key <AC11> { [ UFEF7, UFEF9 ] }; // ' key -> لأ (Hamza Above), Shift -> لإ (Hamza Below)
+
+    // Row B (Bottom: Z-M)
+    key <AB01> { [ U0632, U0630 ] }; // Z -> Zain (ز), Shift: Thal (ذ)
+    key <AB02> { [ U0638, U064c ] }; // X -> Zah (ظ), Shift: Dammatayn (ٌ)
+    key <AB03> { [ U062b, U064d ] }; // C -> Theh (ث), Shift: Kasratayn (ٍ)
+    key <AB04> { [ U0649, U064b ] }; // V -> Alef Maksura (ى), Shift: Fathatayn (ً)
+    key <AB05> { [ U0628, U064f ] }; // B -> Beh (ب), Shift: Damma (ُ)
+    key <AB06> { [ U0646, U0650 ] }; // N -> Noon (ن), Shift: Kasra (ِ)
+    key <AB07> { [ U0645, U064e ] }; // M -> Meem (م), Shift: Fatha (َ)
+    key <AB10> { [ U0670, U061f ] }; // Press -> Dagger Alef (◌ٰ), Shift -> Arabic Question Mark (؟)
+};

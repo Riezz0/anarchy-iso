@@ -1,0 +1,118 @@
+{
+    "name": "pywal",
+    "variables": {
+        "accent_color": "{color12}",
+        "accent_bg_color": "{color12}",
+        "accent_fg_color": "{color12.lighten(70%)}",
+        "destructive_color": "{color11}",
+        "destructive_bg_color": "{color3}",
+        "destructive_fg_color": "{color11.lighten(70%)}",
+        "success_color": "{color13}",
+        "success_bg_color": "{color13}",
+        "success_fg_color": "{color15}",
+        "warning_color": "{color14}",
+        "warning_bg_color": "{color6}",
+        "warning_fg_color": "{color15}",
+        "error_color": "{color11}",
+        "error_bg_color": "{color3}",
+        "error_fg_color": "{color15}",
+        "window_bg_color": "{color0}",
+        "window_fg_color": "{color15}",
+        "view_bg_color": "{color0.lighten(1%)}",
+        "view_fg_color": "{color15}",
+        "headerbar_bg_color": "{color0}",
+        "headerbar_fg_color": "{color15}",
+        "headerbar_border_color": "{color0.lighten(3%)}",
+        "headerbar_backdrop_color": "{color4}",
+        "headerbar_shade_color": "{color0.lighten(2%)}",
+        "card_bg_color": "{color0.lighten(2%)}",
+        "card_fg_color": "{color15}",
+        "card_shade_color": "{color0.lighten(1%)}",
+        "dialog_bg_color": "{color0}",
+        "dialog_fg_color": "{color15}",
+        "popover_bg_color": "{color0}",
+        "popover_fg_color": "{color15}",
+        "shade_color": "{color0}",
+        "scrollbar_outline_color": "{color12}",
+        "sidebar_bg_color": "{color0}",
+        "sidebar_fg_color": "{color15}",
+        "sidebar_backdrop_color": "{color0.lighten(1%)}",
+        "sidebar_shade_color": "{color0.lighten(2%)}"
+    },
+    "palette": {
+        "blue_": {
+            "1": "#99c1f1",
+            "2": "#62a0ea",
+            "3": "#3584e4",
+            "4": "#1c71d8",
+            "5": "#1a5fb4"
+        },
+        "green_": {
+            "1": "#8ff0a4",
+            "2": "#57e389",
+            "3": "#33d17a",
+            "4": "#2ec27e",
+            "5": "#26a269"
+        },
+        "yellow_": {
+            "1": "#f9f06b",
+            "2": "#f8e45c",
+            "3": "#f6d32d",
+            "4": "#f5c211",
+            "5": "#e5a50a"
+        },
+        "orange_": {
+            "1": "#ffbe6f",
+            "2": "#ffa348",
+            "3": "#ff7800",
+            "4": "#e66100",
+            "5": "#c64600"
+        },
+        "red_": {
+            "1": "#f66151",
+            "2": "#ed333b",
+            "3": "#e01b24",
+            "4": "#c01c28",
+            "5": "#a51d2d"
+        },
+        "purple_": {
+            "1": "#dc8add",
+            "2": "#c061cb",
+            "3": "#9141ac",
+            "4": "#813d9c",
+            "5": "#613583"
+        },
+        "brown_": {
+            "1": "#cdab8f",
+            "2": "#b5835a",
+            "3": "#986a44",
+            "4": "#865e3c",
+            "5": "#63452c"
+        },
+        "light_": {
+            "1": "#ffffff",
+            "2": "#f6f5f4",
+            "3": "#deddda",
+            "4": "#c0bfbc",
+            "5": "#9a9996"
+        },
+        "dark_": {
+            "1": "#77767b",
+            "2": "#5e5c64",
+            "3": "#3d3846",
+            "4": "#241f31",
+            "5": "#000000"
+        }
+    },
+    "custom_css": {
+        "gtk4": "/* Sidebar hover gets a 15% transparent shade of your accent color */ .navigation-sidebar row:hover { background-color: alpha({color12}, 0.15); } /* Main panel items get full accent background and dark text on hover */ listview row:hover, gridview child:hover, listview row:hover label, gridview child:hover label { background-color: {color12}; color: {color0}; } /* Thicker 2px accent border for GTK4 popovers */ popover contents { border: 2px solid {color12}; box-shadow: none; } /* Color context menu items on hover */ popover contents modelbutton:hover { background-color: {color12}; color: {color0}; } /* Libadwaita Tab Bar Overrides */ tabbar { background-color: {color0}; } tabbar tab { padding: 4px 12px; color: alpha({color15}, 0.5); background-color: transparent; } tabbar tab:checked { color: {color0}; background-color: {color12}; } tabbar tab:hover:not(:checked) { background-color: alpha({color12}, 0.12); color: {color15}; } /* Window Frame Accent Line */ window.main-window, window.dialog { border: 1.5px solid {color12}; border-radius: 0px; } /* Clean Path-bar Breadcrumbs Buttons */ .path-bar button { background-color: alpha({color15}, 0.04); border-radius: 0px; margin: 0 2px; padding: 4px 8px; transition: all 0.15s ease; } .path-bar button:hover { background-color: {color12}; color: {color0}; } /* Input Fields & Focus Glows */ entry, textview text { border: 1px solid alpha({color15}, 0.1); border-radius: 0px; } entry:focus, textview text:focus { border-color: {color12}; box-shadow: 0 0 0 2px alpha({color12}, 0.2); } /* Text Selection Highlights */ selection { background-color: {color12}; color: {color0}; }",
+        "gtk3": "button:hover, combo button:hover, stackswitcher button:hover { background-color: {color12}; color: {color15}; } row:hover, cell:hover, row:hover label, cell:hover label { background-color: {color12}; color: {color0}; } row:selected, cell:selected { background-color: alpha({color12}, 0.30); color: {color15}; } entry:hover { border-color: {color12}; } /* Thicker 2px accent border for GTK3 menus */ menu, .menu, context-menu { border: 2px solid {color12}; } /* Color GTK3 menu items on hover */ menu menuitem:hover, .menu menuitem:hover { background-color: {color12}; color: {color0}; } /* Text Selection Highlights */ selection { background-color: {color12}; color: {color0}; }"
+    },
+    "plugins": {
+        "flatpak": {
+            "enabled": true,
+            "manage_permissions": true,
+            "use_portal": true
+        }
+    }
+}

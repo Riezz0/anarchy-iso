@@ -26,4 +26,12 @@ file_permissions=(
   ["/usr/local/bin/choose-mirror"]="0:0:755"
   ["/usr/local/bin/Installation_guide"]="0:0:755"
   ["/usr/local/bin/livecd-sound"]="0:0:755"
+  ["/usr/local/bin/awww.sh"]="0:0:755"
+  ["/usr/local/bin/qbarmain.sh"]="0:0:755"
+  ["/usr/local/bin/welcome.sh"]="0:0:755"
+  ["/usr/local/bin/wf-recorder-toggle.sh "]="0:0:755"
+  ["/etc/skel/.config/rofi/launcher/launcher.sh"]="0:0:755"
+  ["/etc/skel/.config/.hypr-themes/tokyo-night/tokyo-night.sh"]="0:0:755"
+  ["/etc/skel/.config/quickshell/scripts/wf-recorder.sh"]="0:0:755"
+  
 )

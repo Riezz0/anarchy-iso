@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "version": "1.0",
+  "name": "Pywal Theme",
+  "description": "Auto-generated Brave theme from pywal colors",
+  "theme": {
+    "colors": {
+      "ntp_background": [{background.rgb}],
+      "ntp_text": [{foreground.rgb}],
+      "ntp_link": [{color4.rgb}],
+      "ntp_section": [{background.rgb}],
+      "toolbar": [{background.rgb}],
+      "toolbar_text": [{foreground.rgb}],
+      "toolbar_button_icon": [{foreground.rgb}],
+      "tab_text": [{foreground.rgb}],
+      "tab_background_text": [{color7.rgb}],
+      "bookmark_text": [{foreground.rgb}],
+      "omnibox_text": [{foreground.rgb}],
+      "omnibox_background": [{background.rgb}],
+      "omnibox_border": [{color8.rgb}],
+      "omnibox_selection_bg": [{color8.rgb}],
+      "omnibox_selection_text": [{foreground.rgb}],
+      "frame": [{color0.rgb}],
+      "frame_inactive": [{color0.rgb}],
+      "frame_incognito": [{color0.rgb}],
+      "frame_incognito_inactive": [{color0.rgb}],
+      "background_tab": [{background.rgb}],
+      "background_tab_inactive": [{background.rgb}],
+      "background_tab_incognito": [{background.rgb}],
+      "background_tab_incognito_inactive": [{background.rgb}]
+    },
+    "tints": {
+      "buttons": [-1.0, -1.0, -1.0],
+      "frame_incognito": [-1.0, 0.2, 0.6],
+      "background_tab_incognito": [-1.0, 0.2, 0.6]
+    },
+    "properties": {
+      "ntp_background_alignment": "center",
+      "ntp_background_repeat": "no-repeat",
+      "ntp_logo_alternate": 0
+    }
+  }
+}
