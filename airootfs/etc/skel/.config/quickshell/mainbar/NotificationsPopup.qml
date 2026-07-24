@@ -14,7 +14,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -47,7 +47,7 @@ Variants {
             width:    440
             implicitHeight: headerColumn.implicitHeight + Math.min(notifListContent.implicitHeight, maxPanelHeight - headerColumn.implicitHeight - 48) + 48
             height:   implicitHeight
-            radius:   5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.95
             border { width: 2; color: theme.color4 }
@@ -99,7 +99,7 @@ Variants {
                     Layout.fillWidth: true
                     Layout.bottomMargin: 16
                     implicitHeight: 36
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  notifs.dndEnabled ? theme.color1 : "transparent"
                     border { width: 2; color: theme.color4 }
 
@@ -136,7 +136,7 @@ Variants {
                     Layout.fillWidth: true
                     Layout.bottomMargin: 16
                     implicitHeight: 32
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color1 }
 
@@ -195,7 +195,7 @@ Variants {
                             width:    notifListContent.width
                             implicitHeight: notifItemContent.implicitHeight + 24
                             height:   implicitHeight
-                            radius: 5
+                            radius: barSettings.barRadius
                             color:  Qt.darker(theme.background, 1.15)
                             border {
                                 width: 2
@@ -218,7 +218,7 @@ Variants {
                                     Rectangle {
                                         width:  32
                                         height: 32
-                                        radius: 5
+                                        radius: barSettings.barRadius
                                         color:  Qt.darker(theme.background, 1.2)
                                         border { width: 1; color: theme.muted }
 
@@ -259,7 +259,7 @@ Variants {
                                     Rectangle {
                                         width:  24
                                         height: 24
-                                        radius: 5
+                                        radius: barSettings.barRadius
                                         color:  "transparent"
                                         border { width: 1; color: theme.muted }
 

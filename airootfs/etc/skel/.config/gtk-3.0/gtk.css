@@ -85,7 +85,7 @@ https://github.com/GradienceTeam/Gradience
 @define-color light_5 #9a9996;
 @define-color dark_1 #77767b;
 @define-color dark_2 #5e5c64;
-@define-color dark_3 #3d3846;
+@define-color dark_3 #33d17a;
 @define-color dark_4 #241f31;
 @define-color dark_5 #000000;
 button:hover, combo button:hover, stackswitcher button:hover { background-color: #8db0ff; color: #c0caf5; } row:hover, cell:hover, row:hover label, cell:hover label { background-color: #8db0ff; color: #1a1b26; } row:selected, cell:selected { background-color: alpha(#8db0ff, 0.30); color: #c0caf5; } entry:hover { border-color: #8db0ff; } /* Thicker 2px accent border for GTK3 menus */ menu, .menu, context-menu { border: 2px solid #8db0ff; } /* Color GTK3 menu items on hover */ menu menuitem:hover, .menu menuitem:hover { background-color: #8db0ff; color: #1a1b26; } /* Text Selection Highlights */ selection { background-color: #8db0ff; color: #1a1b26; }

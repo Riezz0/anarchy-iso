@@ -185,7 +185,7 @@ Item {
 
     // ── Popup Windows ─────────────────────────────────────────────────────
     Variants {
-        model: [Quickshell.screens[1]]
+        model: barSettings.popupScreens()
 
         PanelWindow {
             screen:  modelData
@@ -223,7 +223,7 @@ Item {
                     anchors.centerIn: parent
                     width:            1200
                     height:           700
-                    radius:           5
+            radius:   barSettings.barRadius
                     color:            theme.background
                     border { color: theme.color2; width: 2 }
 

@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -58,7 +58,7 @@ Variants {
             anchors.topMargin:        20
             width:    osdRow.implicitWidth + 40
             height:   44
-            radius:   5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  osd.showOsd ? 0.95 : 0
 

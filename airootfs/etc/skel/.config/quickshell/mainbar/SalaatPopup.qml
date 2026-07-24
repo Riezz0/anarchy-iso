@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -33,7 +33,7 @@ Variants {
             width:    320
             implicitHeight: popupColumn.implicitHeight + 32
             height:   implicitHeight
-            radius: 5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.95
             border { width: 2; color: theme.color3 }
@@ -89,7 +89,7 @@ Variants {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 32
                         Layout.bottomMargin: 4
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color: modelData.name === salaat.nextPrayer
                             ? Qt.darker(theme.color3, 1.5)
                             : "transparent"
@@ -139,7 +139,7 @@ Variants {
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 36
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color: "transparent"
                         border { width: 2; color: theme.color4 }
 
@@ -165,7 +165,7 @@ Variants {
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 36
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color: "transparent"
                         border { width: 2; color: theme.color5 }
 
@@ -185,6 +185,57 @@ Variants {
                                 salaatPopup.close()
                                 root.runCommand("chromium --app=https://www.sunnah.com")
                             }
+                        }
+                    }
+                }
+
+                // Separator
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+                    Layout.bottomMargin: 8
+                    height: 1
+                    color: theme.muted
+                    opacity: 0.4
+                }
+
+                // Quran Player button
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 36
+                    radius:   barSettings.barRadius
+                    color: quranPlayerBtnArea.containsMouse ? Qt.darker(theme.color3, 1.3) : "transparent"
+                    border { width: 2; color: theme.color3 }
+
+                    Row {
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Text {
+                            text: "󰎈"
+                            font.pixelSize: 14
+                            color: theme.color3
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
+                            text: "Quran Player"
+                            font.pixelSize: 14
+                            font.bold: true
+                            font.family: "JetBrains Mono Nerd Font Mono"
+                            color: theme.color3
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    MouseArea {
+                        id: quranPlayerBtnArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            salaatPopup.close()
+                            root.quranPlayerPopupOpen = true
                         }
                     }
                 }

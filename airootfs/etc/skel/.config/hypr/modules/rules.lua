@@ -85,7 +85,7 @@ border_color = theme.color2 .. " " .. theme.color15 })
 
 -- ARCH UPDATE
 hl.window_rule({ name = "archupdaterules", match = { class = "kitty", title = "arch-update" },
-opacity = "1", border_color = theme.color2 .. " " .. theme.color15 })
+opacity = "1", animation = "slide top", border_color = theme.color2 .. " " .. theme.color15 })
 hl.on("window.title", function(w)
   if w ~= nil and w.class == "kitty" and w.title == "arch-update" then
     hl.dispatch(hl.dsp.window.float({ action = "set", window = "address:" .. w.address }))

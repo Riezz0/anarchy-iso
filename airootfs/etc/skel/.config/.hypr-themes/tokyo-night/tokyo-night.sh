@@ -34,12 +34,14 @@ KVANTUM_DIR="$USER_HOME/.config/Kvantum/pywal"
 awww img "$WALL" --transition-fps 144 --transition-step 255 --transition-type random
 cp -r "$WALL" "/home/$USER/.config/hypr/lock.png"
 cp -r "$WALL" "/home/$USER/.config/activebg/Wall.png"
+cp "$WALL" "/var/local/sddm-wallpaper/background.jpg"
 
 #------------------------#
 # SET COLOR SCHEME
 #------------------------#
 cp -r "$THEME_DIR/pywal" "$PYWAL"
 wal --theme "$PYWAL"  # synchronous to ensure cache files exist
+cp ~/.cache/wal/colors.qml /var/local/sddm-wallpaper/PywalColors.qml
 
 #------------------------#
 # MAKE DIRECTORIES
@@ -54,7 +56,6 @@ cp -r "$THEME_DIR/hyprlook" "$USER_HOME/.config/hypr/modules/look.lua"
 cp -r "$THEME_DIR/kitty" "$USER_HOME/.config/kitty/kitty.conf"
 cp -r "$THEME_DIR/qcol" "$USER_HOME/.config/quickshell/mainbar/Theme.qml"
 cp -r "$THEME_DIR/rofi" "$USER_HOME/.config/rofi/launcher/colors.rasi"
-cp -r "$THEME_DIR/wf-recorder-toggle.sh" "$USER_HOME/.config/scripts/wf-recorder-toggle.sh"
 cp -f "${HOME}"/.cache/wal/pywal.json "${HOME}"/.config/presets/user/pywal.json
 cp -r $HOME/.cache/wal/colors-discord.css $HOME/.config/vesktop/themes/pywal-vencord.theme.css
 #--------------------------#
@@ -120,8 +121,12 @@ pywalfox update & disown
 #bash /home/$USER/.config/scripts/waybar.sh
 killall quickshell
 bash /usr/local/bin/qbarmain.sh
-systemctl --user restart xdg-desktop-portal-gtk xdg-desktop-portal
 wait
+
+#------------------------#
+# COPY THEME
+#------------------------#
+cp "$THEME_DIR/$THEME_NAME.sh" "/home/$USER/.local/share/themes/hypr-theme-active.sh"
 
 #------------------------#
 # NOTIFICATION
@@ -132,4 +137,5 @@ notify-send -a "$THEME_DISPLAY" "Theme Loaded"
 # NAUTILUS
 #------------------------#
 nautilus -q && gtk4-update-icon-cache ~/.config/gtk-4.0
+systemctl --user restart xdg-desktop-portal-gtk xdg-desktop-portal
 

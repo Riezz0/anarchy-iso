@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -32,7 +32,7 @@ Variants {
             anchors.bottomMargin: 10
             width:    520
             height:   popupColumn.implicitHeight + 32
-            radius: 5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.95
             border { width: 2; color: theme.color6 }
@@ -97,7 +97,7 @@ Variants {
 
                                 width:  (gridContent.width - 16) / 3
                                 height: 140
-                                radius: 5
+                                radius:   barSettings.barRadius
                                 color:  "transparent"
                                 border { width: 2; color: theme.muted }
 
@@ -112,21 +112,68 @@ Variants {
                                     Rectangle {
                                         width:   parent.width
                                         height:  parent.height - nameLabel.implicitHeight - 10
-                                        radius:  3
+                                        radius:  barSettings.barRadius
                                         color:   Qt.darker(theme.background, 1.3)
-                                        clip:    true
 
                                         Image {
+                                            id: thumbLoader
+                                            source:  modelData.thumbnail
+                                            visible: false
+                                            onStatusChanged: {
+                                                if (status === Image.Ready)
+                                                    thumbCanvas.requestPaint()
+                                            }
+                                        }
+
+                                        Canvas {
+                                            id: thumbCanvas
                                             anchors.fill: parent
-                                            source:       modelData.thumbnail
-                                            fillMode:     Image.PreserveAspectCrop
-                                            smooth:       true
-                                            mipmap:       true
+
+                                            property string imgSource: modelData.thumbnail
+
+                                            onWidthChanged:  requestPaint()
+                                            onHeightChanged: requestPaint()
+                                            onImgSourceChanged: { requestPaint(); retryTimer.restart() }
+                                            Component.onCompleted: { requestPaint(); retryTimer.restart() }
+
+                                            Timer {
+                                                id: retryTimer
+                                                interval: 500
+                                                repeat: false
+                                                onTriggered: thumbCanvas.requestPaint()
+                                            }
+
+                                            onPaint: {
+                                                var ctx = getContext("2d")
+                                                var r = barSettings.barRadius
+                                                var w = width
+                                                var h = height
+
+                                                ctx.clearRect(0, 0, w, h)
+
+                                                ctx.beginPath()
+                                                ctx.moveTo(r, 0)
+                                                ctx.lineTo(w - r, 0)
+                                                ctx.arcTo(w, 0, w, r, r)
+                                                ctx.lineTo(w, h - r)
+                                                ctx.arcTo(w, h, w - r, h, r)
+                                                ctx.lineTo(r, h)
+                                                ctx.arcTo(0, h, 0, h - r, r)
+                                                ctx.lineTo(0, r)
+                                                ctx.arcTo(0, 0, r, 0, r)
+                                                ctx.closePath()
+                                                ctx.clip()
+
+                                                if (thumbLoader.status === Image.Ready)
+                                                    ctx.drawImage(thumbLoader, 0, 0, w, h)
+                                                else if (imgSource !== "")
+                                                    ctx.drawImage(imgSource, 0, 0, w, h)
+                                            }
 
                                             Rectangle {
                                                 anchors.fill: parent
                                                 color: theme.muted
-                                                visible: parent.status === Image.Error
+                                                visible: thumbLoader.status !== Image.Ready
 
                                                 Text {
                                                     anchors.centerIn: parent

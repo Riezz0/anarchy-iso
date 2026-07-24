@@ -68,7 +68,7 @@ Item {
     Rectangle {
         id: recBtn
         anchors.fill: parent
-        radius: 5
+            radius:   barSettings.barRadius
         color: "transparent"
         border {
             width: 2

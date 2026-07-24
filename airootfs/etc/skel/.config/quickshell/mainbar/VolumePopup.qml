@@ -15,7 +15,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -46,7 +46,7 @@ Variants {
             width:    500
             implicitHeight: volumeColumn.implicitHeight + 28
             height:   implicitHeight
-            radius: 5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.90
             border { width: 2; color: theme.color2 }
@@ -95,7 +95,7 @@ Variants {
                     id:     sliderTrack
                     Layout.fillWidth: true
                     implicitHeight: 14
-                    radius: 5
+                    radius:   barSettings.barRadius
                     color:  Qt.darker(theme.background, 1.3)
                     border { width: 2; color: theme.color4 }
 
@@ -106,7 +106,7 @@ Variants {
                             bottom: parent.bottom
                         }
                         width:  parent.width * Math.min(Math.max(audio.volumeLevel, 0), 1)
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color:  audio.volumeMuted ? theme.muted : theme.color2
 
                         Behavior on width { NumberAnimation { duration: 80 } }
@@ -139,7 +139,7 @@ Variants {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: 28
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color:  audio.volumeMuted ? theme.color1 : "transparent"
                         border { width: 2; color: theme.color4 }
 
@@ -161,7 +161,7 @@ Variants {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: 28
-                        radius: 5
+                        radius:   barSettings.barRadius
                         color:  "transparent"
                         border { width: 2; color: theme.color4 }
 

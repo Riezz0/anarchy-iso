@@ -1,0 +1,6 @@
+* {
+bg: #090b15;
+fg: #c1c2c4;
+border: #096B94;
+selected: #981C71;
+}

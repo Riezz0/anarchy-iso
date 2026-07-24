@@ -115,6 +115,22 @@ margin = 250
 alt_toggle = true
 smart_focus = true
 
+[scratchpads.pulsepad]
+command = "kitty --class=pulsepad -e pulsemixer"
+class = "pulsepad"
+animation = "fromTop"
+size = "65% 55%"
+offset = "125px"
+pinned = false
+multi = false
+hide_delay = 0
+match_by = "class"
+process_tracking = false
+allow_special_workspaces = true
+margin = 250
+alt_toggle = true
+smart_focus = true
+
 [shortcuts_menu]
 
 [wallpapers]

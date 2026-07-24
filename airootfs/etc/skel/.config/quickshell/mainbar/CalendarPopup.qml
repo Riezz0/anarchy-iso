@@ -15,7 +15,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -46,7 +46,7 @@ Variants {
             width:    400
             implicitHeight: calendarColumn.implicitHeight + 32
             height:   implicitHeight
-            radius: 5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.95
             border { width: 2; color: theme.color4 }
@@ -68,7 +68,7 @@ Variants {
                     spacing: 8
 
                     Rectangle {
-                        width: 28; height: 28; radius: 5
+                        width: 28; height: 28; radius: barSettings.barRadius
                         color: "transparent"
                         border { width: 2; color: theme.color4 }
 
@@ -96,7 +96,7 @@ Variants {
                     }
 
                     Rectangle {
-                        width: 28; height: 28; radius: 5
+                        width: 28; height: 28; radius: barSettings.barRadius
                         color: "transparent"
                         border { width: 2; color: theme.color4 }
 
@@ -179,7 +179,7 @@ Variants {
                             Layout.fillWidth: true
                             Layout.preferredWidth: 1
                             Layout.preferredHeight: 32
-                            radius: 5
+                            radius:   barSettings.barRadius
                             color: isToday ? theme.color2 : "transparent"
 
                             Text {
@@ -199,7 +199,7 @@ Variants {
                     Layout.fillWidth: true
                     Layout.topMargin: 4
                     implicitHeight: 28
-                    radius: 5
+                    radius:   barSettings.barRadius
                     color: "transparent"
                     border { width: 2; color: theme.color4 }
 

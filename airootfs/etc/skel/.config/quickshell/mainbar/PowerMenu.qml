@@ -54,7 +54,7 @@ Variants {
                 anchors.centerIn: parent
                 width:        Math.min(420, parent.width - 48)
                 height:       powerColumn.implicitHeight + 40
-                radius: 5
+            radius:   barSettings.barRadius
                 color:        theme.background
                 border { color: theme.color2; width: 2 }
 
@@ -108,7 +108,7 @@ Variants {
                     Rectangle {
                         width:            90
                         height:           32
-                        radius: 5
+                    radius:   barSettings.barRadius
                         color:            theme.color1
                         opacity:          cancelMouse.containsMouse ? 0.6 : 1.0
                         Layout.alignment: Qt.AlignHCenter
@@ -151,7 +151,7 @@ Variants {
         Rectangle {
             width:            58
             height:           58
-            radius: 5
+            radius: barSettings.barRadius
             color:            powerButtonRoot.bgColor
             opacity:          buttonMouse.containsMouse ? 0.6 : 1.0
             Layout.alignment: Qt.AlignHCenter

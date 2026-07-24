@@ -47,7 +47,7 @@ Item {
     }
 
     Variants {
-        model: [Quickshell.screens[1]]
+        model: barSettings.popupScreens()
 
         PanelWindow {
             screen:  modelData
@@ -84,7 +84,7 @@ Item {
                         width:    toastColumn.width
                         implicitHeight: toastCol.implicitHeight + 56
                         height:   implicitHeight
-                        radius:   5
+                        radius:   barSettings.barRadius
                         color:    theme.background
                         opacity:  0.95
                         border {

@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════════════════════
-// Bar - Main Status Bar (Primary Monitor)
+// Bar - Main Status Bar
 // ═══════════════════════════════════════════════════════════════════════════════
 // The top bar containing: Arch logo, workspaces, Bluetooth, system resources,
 // weather, recorder, notifications, volume, clock, and power button.
-// Displayed on primary monitor only.
+// Displayed on configured monitor(s) via barSettings.barMonitor.
 //
 // Required properties (passed from shell.qml):
 //   theme, audio, bt, weather, stats, calendar
@@ -17,7 +17,7 @@ import Quickshell
 import Quickshell.Hyprland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
         PanelWindow {
             id:     barWindow
@@ -25,22 +25,26 @@ Variants {
             required property var modelData
             property bool settingsPopupOpen: false
 
+            anchors {
+                top:    barSettings.barPosition === "top"
+                bottom: barSettings.barPosition === "bottom"
+                left:   true
+                right:  true
+            }
 
-        anchors { top: true; left: true; right: true }
+            implicitHeight: 60
+            color:          "transparent"
+            exclusiveZone:  implicitHeight
+            exclusionMode:  ExclusionMode.Normal
 
-        implicitHeight: 60
-        color:          "transparent"
-        exclusiveZone:  implicitHeight
-        exclusionMode:  ExclusionMode.Normal
-
-        margins { left: 10; right: 10; top: 10; bottom: 10 }
+            margins { left: 10; right: 10; top: 10; bottom: 10 }
 
         Rectangle {
             id:           barBackground
             anchors.fill: parent
             color:        theme.background
             opacity:      0.95
-            radius: 5
+            radius: barSettings.barRadius
             border { color: theme.color2; width: 2 }
 
             RowLayout {
@@ -58,7 +62,7 @@ Variants {
                     id:     archBtn
                     width:  40
                     height: 40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color2 }
 
@@ -92,7 +96,7 @@ Variants {
                 // ── Workspaces ────────────────────────────────────────────
                 Rectangle {
                     id:     workspaceContainer
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { color: theme.color4; width: 2 }
 
@@ -123,7 +127,7 @@ Variants {
                                 property int workspaceId: index + 1
                                 width:  25
                                 height: 25
-                                radius: 5
+                                radius: barSettings.barRadius
 
                                 property bool isActive: Hyprland.focusedWorkspace
                                     && Hyprland.focusedWorkspace.id === workspaceId
@@ -176,7 +180,7 @@ Variants {
                         id:           btRect
                         anchors.fill: parent
                         color:        "transparent"
-                        radius: 5
+                        radius: barSettings.barRadius
                         border {
                             width: 2
                             color: theme.color2
@@ -217,7 +221,7 @@ Variants {
                     id:     tempModule
                     width:  40
                     height: 40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color2 }
 
@@ -250,7 +254,7 @@ Variants {
                 // ── Weather //─
                 Rectangle {
                     id:     weatherBtn
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color4 }
 
@@ -301,7 +305,7 @@ Variants {
                     id:     kbdBtn
                     width:  kbdRow.implicitWidth + 20
                     height: 40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color4 }
 
@@ -345,13 +349,47 @@ Variants {
                     Behavior on border.color { ColorAnimation { duration: 120 } }
                 }
 
+                // ── Settings ────────────────────────────────────────────
+                Rectangle {
+                    id:     settingsBtn
+                    width:  40
+                    height: 40
+                    radius: barSettings.barRadius
+                    color:  "transparent"
+                    border { width: 2; color: theme.color5 }
+
+                    Layout.alignment: Qt.AlignVCenter
+
+                    property bool hovered: false
+
+                    Text {
+                        anchors.centerIn: parent
+                        text:           "󰒓"
+                        font.pixelSize: 18
+                        color:          theme.color5
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape:  Qt.PointingHandCursor
+                        onClicked:    root.settingsPopupOpen = !root.settingsPopupOpen
+                        onContainsMouseChanged: {
+                            settingsBtn.hovered = containsMouse
+                            settingsBtn.border.color = containsMouse ? theme.muted : theme.color5
+                        }
+                    }
+
+                    Behavior on border.color { ColorAnimation { duration: 120 } }
+                }
+
                 // ── Center Spacer ─────────────────────────────────────────
                 Item { Layout.fillWidth: true }
 
                 // ── Network //─
                 Rectangle {
                     id:     netBtn
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color4 }
 
@@ -402,7 +440,7 @@ Variants {
                     id:     themesBtn
                     width:  40
                     height: 40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: theme.color6 }
 
@@ -431,13 +469,12 @@ Variants {
                     Behavior on border.color { ColorAnimation { duration: 120 } }
                 }
 
-
                 // ── Updates ──────────────────────────────────────────────
                 Rectangle {
                     id:     updatesBtn
                     implicitWidth:  updatesRow.implicitWidth + 20
                     implicitHeight: 40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:  "transparent"
                     border { width: 2; color: updatesBtn.hovered ? theme.muted : (updates.updatesAvailable ? theme.color3 : theme.color4) }
 
@@ -510,7 +547,7 @@ Variants {
                         id:           notifRect
                         anchors.fill: parent
                         color:        "transparent"
-                        radius: 5
+                        radius: barSettings.barRadius
                         border {
                             width: 2
                             color: notifButton.hovered ? theme.muted
@@ -581,7 +618,7 @@ Variants {
                         id:           volumeRect
                         anchors.fill: parent
                         color:        "transparent"
-                        radius: 5
+                        radius: barSettings.barRadius
                         border {
                             width: 2
                             color: audio.volumeMuted ? theme.color1 : theme.color4
@@ -674,7 +711,7 @@ Variants {
                 Rectangle {
                     width:            40
                     height:           40
-                    radius: 5
+                    radius: barSettings.barRadius
                     color:            root.powerMenuOpen ? theme.color1 : Qt.darker(theme.background, 0.8)
                     opacity:          powerBtnMouse.containsMouse ? 0.6 : 1.0
                     border { color: theme.color1; width: 2 }
@@ -701,25 +738,25 @@ Variants {
             }
         }
 
-        // ── Salaat Widget (fixed center on screen) ──────────────────────
+        // ── Salaat Widget (centered on screen, above bar) ─────────────
         Rectangle {
             id:     salaatBtn
             width:  200
             height: 40
-            radius: 5
-            color:  "transparent"
+            radius: barSettings.barRadius
+            color:  theme.background
+            opacity: 0.95
             border { width: 2; color: theme.color3 }
+            clip:   true
+            z: 10
 
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top:              parent.top
-            anchors.topMargin:        10
+            anchors.verticalCenter:   parent.verticalCenter
 
             property bool hovered: false
 
             Text {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left:           parent.left
-                anchors.leftMargin:     8
+                anchors.centerIn: parent
                 text:             salaat._displayText || "Loading..."
                 font.pixelSize:   14
                 font.bold:        true
@@ -728,6 +765,7 @@ Variants {
                 elide:            Text.ElideRight
                 width:            parent.width - 16
                 clip:             true
+                horizontalAlignment: Text.AlignHCenter
             }
 
             MouseArea {

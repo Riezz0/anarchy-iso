@@ -15,7 +15,7 @@ import Quickshell
 import Quickshell.Wayland
 
 Variants {
-    model: [Quickshell.screens[1]]
+    model: barSettings.popupScreens()
 
     PanelWindow {
         screen:  modelData
@@ -46,7 +46,7 @@ Variants {
             width:    500
             implicitHeight: btColumn.implicitHeight + 32
             height:   implicitHeight
-            radius: 5
+            radius:   barSettings.barRadius
             color:    theme.background
             opacity:  0.95
             border { width: 2; color: theme.color2 }
@@ -96,7 +96,7 @@ Variants {
                     Layout.fillWidth: true
                     Layout.bottomMargin: 16
                     implicitHeight: 32
-                    radius: 5
+                    radius:   barSettings.barRadius
                     color:  bt.enabled ? theme.color2 : "transparent"
                     border { width: 2; color: theme.color4 }
 
@@ -136,7 +136,7 @@ Variants {
                             required property var modelData
                             Layout.fillWidth: true
                             implicitHeight: 48
-                            radius: 5
+                            radius:   barSettings.barRadius
                             color:  modelData.connected ? Qt.darker(theme.background, 1.2) : "transparent"
                             border { width: 2; color: modelData.connected ? theme.color2 : theme.color4 }
 
@@ -172,7 +172,7 @@ Variants {
                                 Rectangle {
                                     width:  90
                                     height: 30
-                                    radius: 5
+                                    radius:   barSettings.barRadius
                                     color:  modelData.connected ? theme.color1 : "transparent"
                                     border { width: 2; color: theme.color4 }
                                     Layout.alignment:   Qt.AlignVCenter
