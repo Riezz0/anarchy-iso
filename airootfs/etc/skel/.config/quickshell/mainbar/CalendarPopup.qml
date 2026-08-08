@@ -67,6 +67,12 @@ Variants {
                     Layout.fillWidth: true
                     spacing: 8
 
+                    Text {
+                        text:           "󰃭"
+                        font.pixelSize: 18
+                        color:          theme.color4
+                    }
+
                     Rectangle {
                         width: 28; height: 28; radius: barSettings.barRadius
                         color: "transparent"

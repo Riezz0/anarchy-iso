@@ -68,6 +68,7 @@ Variants {
                     RowLayout {
                         Layout.fillWidth: true; Layout.bottomMargin: 12
 
+                        Text { text: "󰂃"; font.pixelSize: 18; color: theme.color3 }
                         Text { text: "Quran Player"; font.pixelSize: 14; font.bold: true; color: theme.color3 }
                         Item { Layout.fillWidth: true }
 
@@ -163,7 +164,7 @@ Variants {
                                 Layout.alignment: Qt.AlignVCenter
                                 width: 36; height: 36; radius: 18
                                 color: theme.color3; opacity: 0.15
-                                Text { anchors.centerIn: parent; text: "\u266B"; font.pixelSize: 18; color: theme.color3 }
+                                Text { anchors.centerIn: parent; text: "󰂃"; font.pixelSize: 18; color: theme.color3 }
                             }
                             ColumnLayout {
                                 Layout.fillWidth: true; spacing: 1
@@ -422,7 +423,7 @@ Variants {
                                         Text { text: modelData.verses + " ayat"; font.pixelSize: 10; font.family: "JetBrains Mono Nerd Font Mono"; color: theme.muted }
                                         Text {
                                             visible: modelData.n === quranPlayer.currentSurah && quranPlayer.playing
-                                            text: "\u266B"; font.pixelSize: 12; color: theme.color3
+                                            text: "󰂃"; font.pixelSize: 12; color: theme.color3
                                         }
                                     }
                                     MouseArea { id: surahArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: quranPlayer.playSurah(modelData.n) }

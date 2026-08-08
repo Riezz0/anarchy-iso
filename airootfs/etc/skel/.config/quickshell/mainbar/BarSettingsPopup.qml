@@ -53,6 +53,12 @@ Variants {
                     Layout.fillWidth: true
 
                     Text {
+                        text:           "󰒓"
+                        font.pixelSize: 18
+                        color:          theme.color5
+                    }
+
+                    Text {
                         text:           "Settings"
                         font.pixelSize: 16
                         font.bold:      true

@@ -49,12 +49,23 @@ Variants {
                 spacing: 0
 
                 // Header
-                Text {
-                    text:           "Themes"
-                    font.pixelSize: 14
-                    font.bold:      true
-                    color:          theme.foreground
+                RowLayout {
+                    Layout.fillWidth: true
                     Layout.bottomMargin: 4
+                    spacing: 8
+
+                    Text {
+                        text:           "󰔉"
+                        font.pixelSize: 18
+                        color:          theme.color6
+                    }
+
+                    Text {
+                        text:           "Themes"
+                        font.pixelSize: 14
+                        font.bold:      true
+                        color:          theme.foreground
+                    }
                 }
 
                 Text {
