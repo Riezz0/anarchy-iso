@@ -34,5 +34,5 @@ file_permissions=(
   ["/etc/skel/.config/.hypr-themes/tokyo-night/tokyo-night.sh"]="0:0:755"
   ["/etc/skel/.local/share/themes/hypr-theme-active.sh"]="0:0:755"
   ["/etc/skel/.config/quickshell/scripts/wf-recorder.sh"]="0:0:755"
-  
+  ["/var/local/sddm-wallpaper"]="1000:sddm:775"
 )

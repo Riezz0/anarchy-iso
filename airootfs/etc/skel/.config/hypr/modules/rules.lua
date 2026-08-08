@@ -100,3 +100,8 @@ hl.window_rule({ name = "ytdlpyrules", match = { class = "yt-dlp-gui.py" },
 float = true, size = "1200 700", center = true, border_size = 2, opacity = "1", animation = "slide top", 
 border_color = theme.color2 .. " " .. theme.color15 })
 
+-- ANARCHY GUI INSTALLER
+hl.window_rule({ name = "anarchinst", match = { class = "com.anarchy.installer" },
+float = true, size = "1200 700", center = true, border_size = 2, opacity = "1", animation = "slide top", 
+border_color = theme.color2 .. " " .. theme.color15 })
+

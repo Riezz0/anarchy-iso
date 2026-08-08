@@ -14,8 +14,12 @@ Rectangle {
     id: container
     width: 1920
     height: 1080
-    color: config.backgroundColor
+    color: pywalColors.loaded ? pywalColors.background : config.backgroundColor
     focus: !loginState.visible
+
+    PywalColors {
+        id: pywalColors
+    }
 
     // User & Session Logic (Root Level)
     property int userIndex: 0
@@ -100,17 +104,24 @@ Rectangle {
     }
 
     // Dynamic Color Configuration
-    property color extractedAccent: config.accentColor
-    property color baseColor: config.backgroundColor
+    property color extractedAccent: pywalColors.loaded ? pywalColors.color2 : config.accentColor
+    property color baseColor: pywalColors.loaded ? pywalColors.background : config.backgroundColor
     property color surfaceColor: Qt.lighter(baseColor, 1.3)
     property color surfaceVariantColor: Qt.lighter(baseColor, 1.6)
-    property bool uiReady: config.autoColor !== "true" || colorExtractor.processed
+    property color errorColor: pywalColors.loaded ? pywalColors.color1 : "#442222"
+    property color successColor: pywalColors.loaded ? pywalColors.color2 : extractedAccent
+    property color infoColor: pywalColors.loaded ? pywalColors.color4 : extractedAccent
+    property color highlightColor: pywalColors.loaded ? pywalColors.color5 : surfaceVariantColor
+    property color mutedColor: pywalColors.loaded ? pywalColors.color7 : "gray"
+    property color dimColor: pywalColors.loaded ? pywalColors.color8 : "#666666"
+    property color avatarBgColor: pywalColors.loaded ? pywalColors.color6 : surfaceColor
+    property bool uiReady: pywalColors.loaded || config.autoColor !== "true" || colorExtractor.processed
 
     Timer {
         id: colorDelay
-        interval: 1000 // Give it a full second
-        repeat: true   // Keep trying until we succeed
-        running: backgroundImage.status === Image.Ready && !colorExtractor.processed && config.autoColor === "true"
+        interval: 1000
+        repeat: true
+        running: backgroundImage.status === Image.Ready && !colorExtractor.processed && config.autoColor === "true" && !pywalColors.loaded
         onTriggered: colorExtractor.requestPaint()
     }
 
@@ -124,6 +135,10 @@ Rectangle {
         property int retries: 0 // Add this to track GPU sync delays
 
         onPaint: {
+            if (pywalColors.loaded) {
+                processed = true;
+                return;
+            }
             var ctx = getContext("2d");
             var res = 60;
             ctx.clearRect(0, 0, res, res);
@@ -145,7 +160,9 @@ Rectangle {
                 retries++;
                 if (retries > 3) {
                     // If it's still pure black after 3 tries, it's a true black wallpaper
-                    container.extractedAccent = "#D0D0D0";
+                    if (!pywalColors.loaded) {
+                        container.extractedAccent = pywalColors.foreground;
+                    }
                     console.log("Pixie SDDM: Pure black wallpaper detected. Using neutral contrast.");
                     processed = true;
                 }
@@ -189,7 +206,12 @@ Rectangle {
                 }
                 var avgBrightness = totalBrightness / pixelCount;
 
-                container.extractedAccent = avgBrightness < 0.5 ? "#D0D0D0" : "#404040";
+                if (pywalColors.loaded) {
+                    processed = true;
+                    return;
+                }
+
+                container.extractedAccent = avgBrightness < 0.5 ? (pywalColors.loaded ? pywalColors.foreground : "#D0D0D0") : (pywalColors.loaded ? pywalColors.background : "#404040");
                 console.log("Pixie SDDM: No vibrant colors. Avg brightness: " + avgBrightness.toFixed(2) + ". Using neutral contrast.");
                 processed = true;
                 return;
@@ -209,6 +231,10 @@ Rectangle {
             }
 
             if (winnerIdx !== -1 && sampleColors[winnerIdx]) {
+                if (pywalColors.loaded) {
+                    processed = true;
+                    return;
+                }
                 var finalColor = sampleColors[winnerIdx];
                 var h = finalColor.hsvHue;
                 var s = Math.max(0.35, Math.min(0.55, finalColor.hsvSaturation * 0.9));
@@ -222,7 +248,7 @@ Rectangle {
     Connections {
         target: backgroundImage
         function onStatusChanged() {
-            if (backgroundImage.status === Image.Ready) {
+            if (backgroundImage.status === Image.Ready && !pywalColors.loaded) {
                 colorExtractor.processed = false;
                 colorDelay.start();
             }
@@ -257,7 +283,7 @@ Rectangle {
 
     Rectangle {
         anchors.fill: parent
-        color: "black"
+        color: pywalColors.loaded ? pywalColors.color0 : "black"
         opacity: loginState.visible ? 0.6 : 0.4
         Behavior on opacity { NumberAnimation { duration: 400 } }
     }
@@ -292,21 +318,21 @@ Rectangle {
         onActivated: container.doLogin()
     }
 
-    Text {
-        id: dateText
-        text: Qt.formatDateTime(new Date(), "dddd, MMMM d")
-        color: container.extractedAccent
-        font.pixelSize: 22
-        font.family: fontNerd.name
-        anchors {
-            top: parent.top
-            left: parent.left
-            topMargin: 50
-            leftMargin: 60
+Text {
+            id: dateText
+            text: Qt.formatDateTime(new Date(), "dddd, MMMM d")
+            color: pywalColors.loaded ? pywalColors.foreground : config.textColor
+            font.pixelSize: 22
+            font.family: fontNerd.name
+            anchors {
+                top: parent.top
+                left: parent.left
+                topMargin: 50
+                leftMargin: 60
+            }
+            opacity: container.uiReady ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 300 } }
         }
-        opacity: container.uiReady ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 300 } }
-    }
 
     Item {
         id: lockState
@@ -327,7 +353,7 @@ Rectangle {
 
         Text {
             text: "Press any key to unlock"
-            color: config.textColor
+            color: pywalColors.loaded ? pywalColors.foreground : config.textColor
             font.pixelSize: 16
             anchors {
                 bottom: parent.bottom
@@ -375,7 +401,7 @@ Rectangle {
             height: 480 + (numLockIndicator.visible ? 40 : 0)
             x: (parent.width - width) / 2
             y: (parent.height - 480) / 2
-            color: loginState.isError ? "#442222" : baseColor
+            color: loginState.isError ? errorColor : (pywalColors.loaded ? Qt.rgba(pywalColors.color0.r, pywalColors.color0.g, pywalColors.color0.b, 0.85) : baseColor)
             opacity: 0.7
             radius: 32
 
@@ -398,7 +424,7 @@ Rectangle {
                     Rectangle {
                         id: avatarFallback
                         anchors.fill: parent
-                        color: surfaceColor
+                        color: avatarBgColor
                         radius: width / 2
                         visible: avatar.status !== Image.Ready
 
@@ -415,7 +441,7 @@ Rectangle {
                                 }
                                 return n.charAt(0).toUpperCase();
                             }
-                            color: container.extractedAccent
+                            color: pywalColors.loaded ? pywalColors.color0 : container.extractedAccent
                             font.pixelSize: 48
                             font.family: fontNerd.name
                             font.weight: Font.Bold
@@ -481,7 +507,7 @@ Rectangle {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: "white"
+                        color: pywalColors.loaded ? pywalColors.foreground : "white"
                         opacity: userClickArea.pressed ? 0.2 : 0
                         radius: 12
                         Behavior on opacity { NumberAnimation { duration: 100 } }
@@ -503,7 +529,7 @@ Rectangle {
                             }
                             return cleanName(sddm.lastUser ? sddm.lastUser : "User");
                         }
-                        color: "white"
+                        color: pywalColors.loaded ? pywalColors.foreground : "white"
                         font.pixelSize: 24
                         font.weight: Font.Bold
                         font.family: fontNerd.name
@@ -524,10 +550,10 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.preferredWidth: 280
                     Layout.preferredHeight: 36
-                    color: (sessionClickArea.pressed || sessionPopup.opened) ? surfaceVariantColor : surfaceColor
+                    color: (sessionClickArea.pressed || sessionPopup.opened) ? (pywalColors.loaded ? pywalColors.color5 : surfaceVariantColor) : (pywalColors.loaded ? pywalColors.color4 : surfaceColor)
                     radius: 18
                     border.width: 1
-                    border.color: (sessionClickArea.pressed || sessionPopup.opened) ? container.extractedAccent : surfaceVariantColor
+                    border.color: color
 
                     scale: sessionClickArea.pressed ? 0.95 : 1.0
                     Behavior on scale { NumberAnimation { duration: 100 } }
@@ -537,7 +563,7 @@ Rectangle {
                         spacing: 8
                         Text {
                             text: "󰟀"
-                            color: container.extractedAccent
+                            color: pywalColors.loaded ? pywalColors.color5 : container.extractedAccent
                             font.pixelSize: 16
                         }
                         Text {
@@ -553,7 +579,7 @@ Rectangle {
                                 }
                                 return "Hyprland";
                             }
-                            color: "white"
+                            color: pywalColors.loaded ? pywalColors.foreground : "white"
                             font.pixelSize: 13
                             font.weight: Font.Medium
                             elide: Text.ElideRight
@@ -574,21 +600,21 @@ Rectangle {
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: 18
-                    color: "white"
+                    color: pywalColors.loaded ? pywalColors.foreground : "white"
                     focus: loginState.visible
                     enabled: !container.isLoggingIn
 
                     background: Rectangle {
-                        color: surfaceColor
+                        color: pywalColors.loaded ? Qt.rgba(pywalColors.color8.r, pywalColors.color8.g, pywalColors.color8.b, 0.6) : surfaceColor
                         radius: 16
                         border.width: parent.activeFocus ? 2 : 0
-                        border.color: container.extractedAccent
+                        border.color: pywalColors.loaded ? pywalColors.color4 : container.extractedAccent
                         opacity: parent.enabled ? 1.0 : 0.5
                     }
 
                     Text {
                         text: "Enter Password"
-                        color: "gray"
+                        color: pywalColors.loaded ? pywalColors.color7 : "gray"
                         font.pixelSize: 16
                         visible: !parent.text
                         anchors.centerIn: parent
@@ -601,7 +627,7 @@ Rectangle {
                 Text {
                     id: numLockIndicator
                     text: "Num Lock is on"
-                    color: container.extractedAccent
+                    color: pywalColors.loaded ? pywalColors.color3 : container.extractedAccent
                     font.pixelSize: 14
                     font.family: fontNerd.name
                     font.weight: Font.Medium
@@ -624,14 +650,14 @@ Rectangle {
 
                     contentItem: Text {
                         text: container.isLoggingIn ? "⋯" : "→"
-                        color: "white"
+                        color: pywalColors.loaded ? pywalColors.color0 : "white"
                         font.pixelSize: 32
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     background: Rectangle {
-                        color: container.isLoggingIn ? surfaceVariantColor : (loginButton.pressed ? Qt.darker(container.extractedAccent, 1.1) : container.extractedAccent)
+                        color: container.isLoggingIn ? (pywalColors.loaded ? pywalColors.color8 : surfaceVariantColor) : (loginButton.pressed ? Qt.darker(successColor, 1.1) : successColor)
                         radius: 32
                         opacity: container.isLoggingIn ? 0.5 : 1.0
                     }
@@ -665,10 +691,10 @@ Rectangle {
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         onOpened: userList.forceActiveFocus()
         background: Rectangle {
-            color: baseColor
+            color: pywalColors.loaded ? Qt.rgba(pywalColors.color0.r, pywalColors.color0.g, pywalColors.color0.b, 0.95) : baseColor
             radius: 24
             opacity: 0.95
-            border.color: surfaceVariantColor
+            border.color: dimColor
             border.width: 1
         }
         enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200 } }
@@ -688,7 +714,7 @@ Rectangle {
                 height: 40
                 property bool isCurrent: index === userList.currentIndex
                 background: Rectangle {
-                    color: isCurrent ? surfaceVariantColor : (hovered ? surfaceColor : "transparent")
+                    color: isCurrent ? highlightColor : (hovered ? surfaceColor : "transparent")
                     radius: 12
                     Rectangle {
                         anchors.left: parent.left
@@ -696,7 +722,7 @@ Rectangle {
                         anchors.leftMargin: 8
                         width: 4
                         height: isCurrent ? 16 : 0
-                        color: container.extractedAccent
+                        color: highlightColor
                         radius: 2
                         Behavior on height { NumberAnimation { duration: 150 } }
                     }
@@ -709,7 +735,7 @@ Rectangle {
                         Layout.preferredWidth: 28
                         Layout.preferredHeight: 28
                         Layout.alignment: Qt.AlignVCenter
-                        color: isCurrent ? container.extractedAccent : surfaceVariantColor
+                        color: isCurrent ? infoColor : surfaceVariantColor
                         radius: 14
                         Text {
                             anchors.centerIn: parent
@@ -720,7 +746,7 @@ Rectangle {
                                 var finalVal = d ? d.toString() : (n_r ? n_r.toString() : "U");
                                 return finalVal.charAt(0).toUpperCase();
                             }
-                            color: isCurrent ? baseColor : "white"
+                            color: isCurrent ? baseColor : (pywalColors.loaded ? pywalColors.foreground : "white")
                             font.pixelSize: 12
                             font.family: fontNerd.name
                             font.weight: Font.Bold
@@ -737,7 +763,7 @@ Rectangle {
                             var e = userModel.data(mIdx, Qt.EditRole);
                             return cleanName(d ? d : (r ? r : (n_r ? n_r : e)));
                         }
-                        color: isCurrent ? "white" : (hovered ? "#DDDDDD" : "#AAAAAA")
+                        color: isCurrent ? (pywalColors.loaded ? pywalColors.foreground : "white") : (pywalColors.loaded ? pywalColors.color8 : (hovered ? "#DDDDDD" : "#AAAAAA"))
                         font.pixelSize: 15
                         font.family: fontNerd.name
                         horizontalAlignment: Text.AlignHCenter
@@ -769,10 +795,10 @@ Rectangle {
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         onOpened: sessionList.forceActiveFocus()
         background: Rectangle {
-            color: baseColor
+            color: pywalColors.loaded ? Qt.rgba(pywalColors.color0.r, pywalColors.color0.g, pywalColors.color0.b, 0.95) : baseColor
             radius: 24
             opacity: 0.95
-            border.color: surfaceVariantColor
+            border.color: dimColor
             border.width: 1
         }
         enter: Transition { NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 200 } }
@@ -792,7 +818,7 @@ Rectangle {
                 height: 40
                 property bool isCurrent: index === sessionList.currentIndex
                 background: Rectangle {
-                    color: isCurrent ? surfaceVariantColor : (hovered ? surfaceColor : "transparent")
+                    color: isCurrent ? infoColor : (hovered ? surfaceColor : "transparent")
                     radius: 12
                     Rectangle {
                         anchors.left: parent.left
@@ -800,7 +826,7 @@ Rectangle {
                         anchors.leftMargin: 8
                         width: 4
                         height: isCurrent ? 16 : 0
-                        color: container.extractedAccent
+                        color: infoColor
                         radius: 2
                         Behavior on height { NumberAnimation { duration: 150 } }
                     }
@@ -812,7 +838,7 @@ Rectangle {
                     Text {
                         Layout.preferredWidth: 40
                         text: "󰟀"
-                        color: isCurrent ? container.extractedAccent : "gray"
+                        color: isCurrent ? infoColor : (pywalColors.loaded ? pywalColors.color8 : "gray")
                         font.pixelSize: 16
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -824,7 +850,7 @@ Rectangle {
                             var f_val = sessionModel.data(sessionModel.index(index, 0), Qt.UserRole + 2);
                             return cleanName(n_val ? n_val : f_val);
                         }
-                        color: isCurrent ? "white" : "#AAAAAA"
+                        color: isCurrent ? (pywalColors.loaded ? pywalColors.foreground : "white") : (pywalColors.loaded ? pywalColors.color8 : "#AAAAAA")
                         font.pixelSize: 14
                         font.family: fontNerd.name
                         horizontalAlignment: Text.AlignHCenter

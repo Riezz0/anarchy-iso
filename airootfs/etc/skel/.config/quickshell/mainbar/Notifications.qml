@@ -34,8 +34,10 @@ Item {
     property bool dndEnabled:   false
     property var  activeNotifications: []
 
+    readonly property string cacheDir:
+        StandardPaths.writableLocation(StandardPaths.CacheLocation).replace(/^file:\/\//, "")
     readonly property string persistPath:
-        StandardPaths.writableLocation(StandardPaths.CacheLocation) + "/notifications.json"
+        cacheDir + "/notifications.json"
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Notification Server
@@ -124,7 +126,7 @@ Item {
     Process {
         id: dirCreator
         running: false
-        command: ["sh", "-c", "mkdir -p \"" + StandardPaths.writableLocation(StandardPaths.CacheLocation) + "\""]
+        command: ["sh", "-c", "mkdir -p \"" + notifsRoot.cacheDir + "\""]
     }
 
     Component.onCompleted: {
@@ -161,7 +163,7 @@ Item {
         }
         const json = JSON.stringify(arr)
         const escaped = json.replace(/'/g, "'\\''")
-        fileWriter.command = ["sh", "-c", "mkdir -p '" + StandardPaths.writableLocation(StandardPaths.CacheLocation) + "' && printf '%s' '" + escaped + "' > '" + notifsRoot.persistPath + "'"]
+        fileWriter.command = ["sh", "-c", "mkdir -p '" + notifsRoot.cacheDir + "' && printf '%s' '" + escaped + "' > '" + notifsRoot.persistPath + "'"]
         fileWriter.running = true
     }
 

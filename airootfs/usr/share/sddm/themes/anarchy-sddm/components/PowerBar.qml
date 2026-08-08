@@ -9,7 +9,11 @@ Row {
     spacing: 20
     height: 30
 
-    property color textColor: "white"
+    property color textColor: pywalColors.loaded ? pywalColors.foreground : "white"
+
+    PywalColors {
+        id: pywalColors
+    }
 
     FontLoader { id: iconFont; source: "../assets/fonts/MaterialDesignIcons.ttf" }
 
@@ -70,7 +74,7 @@ Row {
     // Suspend
     Text {
         text: "󰤄"
-        color: textColor
+        color: pywalColors.loaded ? pywalColors.color3 : textColor
         font.pixelSize: 20
         font.family: iconFont.name
         anchors.verticalCenter: parent.verticalCenter
@@ -83,7 +87,7 @@ Row {
     // Restart
     Text {
         text: "󰑐"
-        color: textColor
+        color: pywalColors.loaded ? pywalColors.color4 : textColor
         font.pixelSize: 20
         font.family: iconFont.name
         anchors.verticalCenter: parent.verticalCenter
@@ -96,7 +100,7 @@ Row {
     // Shutdown
     Text {
         text: "󰐥"
-        color: textColor
+        color: pywalColors.loaded ? pywalColors.color1 : textColor
         font.pixelSize: 20
         font.family: iconFont.name
         anchors.verticalCenter: parent.verticalCenter
