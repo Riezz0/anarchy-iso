@@ -19,8 +19,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: btPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -32,10 +34,22 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: btPopup
+            function onIsOpenChanged() {
+                if (btPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         // Click outside to close
         MouseArea {
             anchors.fill: parent
             onClicked:    btPopup.close()
+            opacity: btPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -48,8 +62,14 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: theme.color2 }
+            opacity:  btPopup.isOpen ? 0.95 : 0
+            scale:    btPopup.isOpen ? 1.0 : 0.95
+            y:        btPopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color2 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -71,6 +91,7 @@ Variants {
                     Text {
                         text:           bt.btIcon()
                         font.pixelSize: 24
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          bt.enabled ? theme.color2 : theme.muted
                     }
 
@@ -98,7 +119,7 @@ Variants {
                     implicitHeight: 32
                     radius:   barSettings.barRadius
                     color:  bt.enabled ? theme.color2 : "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Text {
                         anchors.centerIn: parent
@@ -138,7 +159,7 @@ Variants {
                             implicitHeight: 48
                             radius:   barSettings.barRadius
                             color:  modelData.connected ? Qt.darker(theme.background, 1.2) : "transparent"
-                            border { width: 2; color: modelData.connected ? theme.color2 : theme.color4 }
+                            border { width: barSettings.borderThickness; color: modelData.connected ? theme.color2 : theme.color4 }
 
                             RowLayout {
                                 anchors.fill:         parent
@@ -174,7 +195,7 @@ Variants {
                                     height: 30
                                     radius:   barSettings.barRadius
                                     color:  modelData.connected ? theme.color1 : "transparent"
-                                    border { width: 2; color: theme.color4 }
+                                    border { width: barSettings.borderThickness; color: theme.color4 }
                                     Layout.alignment:   Qt.AlignVCenter
                                     Layout.rightMargin: 4
 

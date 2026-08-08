@@ -54,17 +54,19 @@ Variants {
         // ── OSD container ────────────────────────────────────────────────────
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top:              parent.top
-            anchors.topMargin:        20
+            anchors.bottom:           parent.bottom
+            anchors.bottomMargin:     20
             width:    osdRow.implicitWidth + 40
             height:   44
             radius:   barSettings.barRadius
             color:    theme.background
             opacity:  osd.showOsd ? 0.95 : 0
+            y:        osd.showOsd ? 0 : 20
 
             Behavior on opacity { NumberAnimation { duration: 150 } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-            border { width: 2; color: theme.color5 }
+            border { width: barSettings.borderThickness; color: theme.color5 }
 
             Row {
                 id:               osdRow

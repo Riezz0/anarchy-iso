@@ -20,8 +20,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: powerMenu.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -33,10 +35,21 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: powerMenu
+            function onIsOpenChanged() {
+                if (powerMenu.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         // Dim backdrop
         Rectangle {
             anchors.fill: parent
-            color:        Qt.rgba(theme.background.r, theme.background.g, theme.background.b, 0.72)
+            color:        Qt.rgba(theme.background.r, theme.background.g, theme.background.b, powerMenu.isOpen ? 0.72 : 0)
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -51,12 +64,18 @@ Variants {
             Keys.onEscapePressed: powerMenu.close()
 
             Rectangle {
+                id: powerDialog
                 anchors.centerIn: parent
                 width:        Math.min(420, parent.width - 48)
                 height:       powerColumn.implicitHeight + 40
             radius:   barSettings.barRadius
                 color:        theme.background
-                border { color: theme.color2; width: 2 }
+                opacity:      powerMenu.isOpen ? 1.0 : 0
+                scale:        powerMenu.isOpen ? 1.0 : 0.95
+                border { color: theme.color2; width: barSettings.borderThickness }
+
+                Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+                Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
                 MouseArea {
                     anchors.fill: parent
@@ -97,7 +116,7 @@ Variants {
                         }
 
                         PowerButton {
-                            icon:        "󰍀"
+                            icon:        "󰌾"
                             label:       "Lock"
                             bgColor:     theme.color4
                             textColor:   theme.background
@@ -162,6 +181,7 @@ Variants {
                 anchors.centerIn: parent
                 text:             powerButtonRoot.icon
                 font.pixelSize:   40
+                font.family:      "JetBrains Mono Nerd Font Mono"
                 color:            powerButtonRoot.textColor
             }
 

@@ -19,8 +19,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: calPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -32,10 +34,29 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: calPopup
+            function onIsOpenChanged() {
+                if (calPopup.isOpen) {
+                    panelVisible = true
+                } else {
+                    hideTimer.start()
+                }
+            }
+        }
+
+        Timer {
+            id: hideTimer
+            interval: 220
+            onTriggered: panelVisible = false
+        }
+
         // Click outside to close
         MouseArea {
             anchors.fill: parent
             onClicked:    calPopup.close()
+            opacity: calPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -48,8 +69,14 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: theme.color4 }
+            opacity:  calPopup.isOpen ? 0.95 : 0
+            scale:    calPopup.isOpen ? 1.0 : 0.95
+            y:        calPopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color4 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -67,21 +94,16 @@ Variants {
                     Layout.fillWidth: true
                     spacing: 8
 
-                    Text {
-                        text:           "󰃭"
-                        font.pixelSize: 18
-                        color:          theme.color4
-                    }
-
                     Rectangle {
                         width: 28; height: 28; radius: barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: theme.color4 }
+                        border { width: barSettings.borderThickness; color: theme.color4 }
 
                         Text {
                             anchors.centerIn: parent
-                            text: "󰁍"
+                            text: "󰅁"
                             font.pixelSize: 14
+                            font.family: "JetBrains Mono Nerd Font Mono"
                             color: theme.color4
                         }
 
@@ -104,12 +126,13 @@ Variants {
                     Rectangle {
                         width: 28; height: 28; radius: barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: theme.color4 }
+                        border { width: barSettings.borderThickness; color: theme.color4 }
 
                         Text {
                             anchors.centerIn: parent
-                            text: "󰁔"
+                            text: "󰅂"
                             font.pixelSize: 14
+                            font.family: "JetBrains Mono Nerd Font Mono"
                             color: theme.color4
                         }
 
@@ -207,7 +230,7 @@ Variants {
                     implicitHeight: 28
                     radius:   barSettings.barRadius
                     color: "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Text {
                         anchors.centerIn: parent

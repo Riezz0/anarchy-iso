@@ -71,7 +71,7 @@ Item {
             radius:   barSettings.barRadius
         color: "transparent"
         border {
-            width: 2
+            width: barSettings.borderThickness
             color: recorder.recording ? theme.color1 : theme.color4
         }
 

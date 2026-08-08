@@ -8,8 +8,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: quranPlayerPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -21,9 +23,21 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: quranPlayerPopup
+            function onIsOpenChanged() {
+                if (quranPlayerPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         MouseArea {
             anchors.fill: parent
             onClicked:    quranPlayerPopup.close()
+            opacity: quranPlayerPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -33,9 +47,12 @@ Variants {
             height: 500
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: theme.color3 }
+            opacity:  quranPlayerPopup.isOpen ? 0.95 : 0
+            scale:    quranPlayerPopup.isOpen ? 1.0 : 0.95
+            border { width: barSettings.borderThickness; color: theme.color3 }
 
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
             Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.InOutQuad } }
 
             property bool showReciters: false
@@ -68,7 +85,7 @@ Variants {
                     RowLayout {
                         Layout.fillWidth: true; Layout.bottomMargin: 12
 
-                        Text { text: "󰂃"; font.pixelSize: 18; color: theme.color3 }
+                        Text { text: "󰂺"; font.pixelSize: 16; font.family: "JetBrains Mono Nerd Font Mono"; color: theme.color3 }
                         Text { text: "Quran Player"; font.pixelSize: 14; font.bold: true; color: theme.color3 }
                         Item { Layout.fillWidth: true }
 
@@ -164,7 +181,7 @@ Variants {
                                 Layout.alignment: Qt.AlignVCenter
                                 width: 36; height: 36; radius: 18
                                 color: theme.color3; opacity: 0.15
-                                Text { anchors.centerIn: parent; text: "󰂃"; font.pixelSize: 18; color: theme.color3 }
+                                Text { anchors.centerIn: parent; text: "\u266B"; font.pixelSize: 18; color: theme.color3 }
                             }
                             ColumnLayout {
                                 Layout.fillWidth: true; spacing: 1
@@ -229,7 +246,7 @@ Variants {
                         Rectangle {
                             Layout.preferredWidth: 44; Layout.preferredHeight: 36; radius: barSettings.barRadius
                             color: prevArea.containsMouse ? Qt.darker(theme.color3, 1.3) : "transparent"
-                            border { width: 2; color: theme.color3 }
+                            border { width: barSettings.borderThickness; color: theme.color3 }
                             Text { anchors.centerIn: parent; text: "\u23EE"; font.pixelSize: 18; color: theme.color3 }
                             MouseArea { id: prevArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: quranPlayer.prev() }
                         }
@@ -245,7 +262,7 @@ Variants {
                         Rectangle {
                             Layout.preferredWidth: 44; Layout.preferredHeight: 36; radius: barSettings.barRadius
                             color: nextArea.containsMouse ? Qt.darker(theme.color3, 1.3) : "transparent"
-                            border { width: 2; color: theme.color3 }
+                            border { width: barSettings.borderThickness; color: theme.color3 }
                             Text { anchors.centerIn: parent; text: "\u23ED"; font.pixelSize: 18; color: theme.color3 }
                             MouseArea { id: nextArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: quranPlayer.next() }
                         }
@@ -258,7 +275,7 @@ Variants {
                         Rectangle {
                             Layout.preferredWidth: 44; Layout.preferredHeight: 36; radius: barSettings.barRadius
                             color: stopArea.containsMouse ? Qt.darker(theme.color1, 1.3) : "transparent"
-                            border { width: 2; color: theme.color1 }
+                            border { width: barSettings.borderThickness; color: theme.color1 }
                             Text { anchors.centerIn: parent; text: "\u23F9"; font.pixelSize: 18; color: theme.color1 }
                             MouseArea { id: stopArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: quranPlayer.stop() }
                         }
@@ -423,7 +440,7 @@ Variants {
                                         Text { text: modelData.verses + " ayat"; font.pixelSize: 10; font.family: "JetBrains Mono Nerd Font Mono"; color: theme.muted }
                                         Text {
                                             visible: modelData.n === quranPlayer.currentSurah && quranPlayer.playing
-                                            text: "󰂃"; font.pixelSize: 12; color: theme.color3
+                                            text: "\u266B"; font.pixelSize: 12; color: theme.color3
                                         }
                                     }
                                     MouseArea { id: surahArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: quranPlayer.playSurah(modelData.n) }

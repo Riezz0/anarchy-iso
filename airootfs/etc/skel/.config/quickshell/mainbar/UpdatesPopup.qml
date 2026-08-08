@@ -20,8 +20,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: archUpdatePopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -33,9 +35,21 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: archUpdatePopup
+            function onIsOpenChanged() {
+                if (archUpdatePopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         MouseArea {
             anchors.fill: parent
             onClicked:    archUpdatePopup.close()
+            opacity: archUpdatePopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -45,11 +59,17 @@ Variants {
             anchors.topMargin:     10
             width:    420
             implicitHeight: updatesColumn.implicitHeight + 32
-            height:   Math.min(implicitHeight, Quickshell.screens[1].height - 40)
+            height:   Math.min(implicitHeight, Screen.height - 40)
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: updates.updatesAvailable ? theme.color3 : theme.color2 }
+            opacity:  archUpdatePopup.isOpen ? 0.95 : 0
+            scale:    archUpdatePopup.isOpen ? 1.0 : 0.95
+            y:        archUpdatePopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: updates.updatesAvailable ? theme.color3 : theme.color2 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -71,6 +91,7 @@ Variants {
                     Text {
                         text:           updates.updateIcon()
                         font.pixelSize: 24
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          updates.updateColor()
                     }
 
@@ -98,7 +119,7 @@ Variants {
                     implicitHeight: 32
                     radius:   barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: updates.checking ? theme.muted : theme.color4 }
+                    border { width: barSettings.borderThickness; color: updates.checking ? theme.muted : theme.color4 }
 
                     Text {
                         anchors.centerIn: parent
@@ -122,7 +143,7 @@ Variants {
                     Layout.bottomMargin: 12
                     Layout.preferredHeight: Math.min(
                         updatesList.contentHeight,
-                        Quickshell.screens[1].height - 320
+                        Screen.height - 320
                     )
                     clip: true
 
@@ -139,7 +160,7 @@ Variants {
                             implicitHeight: entryRow.implicitHeight + 12
                             radius: 4
                             color:  Qt.darker(theme.background, 1.2)
-                            border { width: 1; color: theme.color4 }
+                            border { width: barSettings.borderThickness; color: theme.color4 }
 
                             RowLayout {
                                 id:               entryRow
@@ -174,7 +195,7 @@ Variants {
                     implicitHeight: 40
                     radius:   barSettings.barRadius
                     color:  updates.updatesAvailable ? Qt.rgba(theme.color3.r, theme.color3.g, theme.color3.b, 0.15) : "transparent"
-                    border { width: 2; color: updates.updatesAvailable ? theme.color3 : theme.muted }
+                    border { width: barSettings.borderThickness; color: updates.updatesAvailable ? theme.color3 : theme.muted }
 
                     Text {
                         anchors.centerIn: parent

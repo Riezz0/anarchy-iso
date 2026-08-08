@@ -20,8 +20,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: networkPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -33,9 +35,21 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: networkPopup
+            function onIsOpenChanged() {
+                if (networkPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         MouseArea {
             anchors.fill: parent
             onClicked:    networkPopup.close()
+            opacity: networkPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -48,8 +62,16 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
+            opacity:  networkPopup.isOpen ? 0.95 : 0
+            scale:    networkPopup.isOpen ? 1.0 : 0.95
+            y:        networkPopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color4 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
             opacity:  0.95
-            border { width: 2; color: theme.color2 }
+            border { width: barSettings.borderThickness; color: theme.color2 }
 
             MouseArea {
                 anchors.fill: parent
@@ -71,6 +93,7 @@ Variants {
                     Text {
                         text:           net.networkIcon()
                         font.pixelSize: 24
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          net.networkColor()
                     }
 
@@ -98,7 +121,7 @@ Variants {
                     implicitHeight: detailsColumn.implicitHeight + 20
                     radius:   barSettings.barRadius
                     color:  Qt.darker(theme.background, 1.2)
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     ColumnLayout {
                         id: detailsColumn
@@ -165,7 +188,7 @@ Variants {
                     implicitHeight: trafficRow.implicitHeight + 20
                     radius:   barSettings.barRadius
                     color:  Qt.darker(theme.background, 1.2)
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     RowLayout {
                         id: trafficRow
@@ -249,7 +272,7 @@ Variants {
                             implicitHeight: 40
                             radius:   barSettings.barRadius
                             color:  isActive ? Qt.darker(theme.background, 1.3) : "transparent"
-                            border { width: 2; color: isActive ? theme.color2 : theme.color4 }
+                            border { width: barSettings.borderThickness; color: isActive ? theme.color2 : theme.color4 }
 
                             RowLayout {
                                 anchors.fill:         parent
@@ -303,7 +326,7 @@ Variants {
                                     visible: !isActive
                                     width: 70; height: 26; radius: 4
                                     color:  "transparent"
-                                    border { width: 2; color: theme.color4 }
+                                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                                     Text {
                                         anchors.centerIn: parent
@@ -339,7 +362,7 @@ Variants {
                     implicitHeight: dnsRow.implicitHeight + 20
                     radius:   barSettings.barRadius
                     color:  Qt.darker(theme.background, 1.2)
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     RowLayout {
                         id: dnsRow
@@ -352,7 +375,7 @@ Variants {
                             implicitHeight: 32
                             radius: 4
                             color:  Qt.darker(theme.background, 1.5)
-                            border { width: 1; color: theme.color4 }
+                            border { width: barSettings.borderThickness; color: theme.color4 }
 
                             TextInput {
                                 id: dnsInput
@@ -388,7 +411,7 @@ Variants {
                             implicitWidth: 60; implicitHeight: 32
                             radius: 4
                             color:  "transparent"
-                            border { width: 2; color: theme.color4 }
+                            border { width: barSettings.borderThickness; color: theme.color4 }
 
                             Text {
                                 anchors.centerIn: parent
@@ -413,7 +436,7 @@ Variants {
                             implicitWidth: 60; implicitHeight: 32
                             radius: 4
                             color:  "transparent"
-                            border { width: 2; color: theme.color1 }
+                            border { width: barSettings.borderThickness; color: theme.color1 }
 
                             Text {
                                 anchors.centerIn: parent
@@ -441,7 +464,7 @@ Variants {
                     implicitHeight: 32
                     radius:   barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Text {
                         anchors.centerIn: parent

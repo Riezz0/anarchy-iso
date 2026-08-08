@@ -18,9 +18,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: notificationsPopup.isOpen
+        visible: panelVisible
         required property var modelData
 
+        property bool panelVisible: false
         property real maxPanelHeight: Screen.height * 0.6
 
         anchors { top: true; bottom: true; left: true; right: true }
@@ -33,10 +34,22 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: notificationsPopup
+            function onIsOpenChanged() {
+                if (notificationsPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         // Click outside to close
         MouseArea {
             anchors.fill: parent
             onClicked:    notificationsPopup.close()
+            opacity: notificationsPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -49,8 +62,16 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
+            opacity:  notificationsPopup.isOpen ? 0.95 : 0
+            scale:    notificationsPopup.isOpen ? 1.0 : 0.95
+            y:        notificationsPopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color1 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
             opacity:  0.95
-            border { width: 2; color: theme.color4 }
+            border { width: barSettings.borderThickness; color: theme.color4 }
 
             MouseArea {
                 anchors.fill: parent
@@ -74,6 +95,7 @@ Variants {
                     Text {
                         text:           notifs.notifIcon()
                         font.pixelSize: 24
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          notifs.notifColor()
                     }
 
@@ -101,7 +123,7 @@ Variants {
                     implicitHeight: 36
                     radius: barSettings.barRadius
                     color:  notifs.dndEnabled ? theme.color1 : "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Row {
                         anchors.centerIn: parent
@@ -138,7 +160,7 @@ Variants {
                     implicitHeight: 32
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color1 }
+                    border { width: barSettings.borderThickness; color: theme.color1 }
 
                     Text {
                         anchors.centerIn: parent
@@ -198,7 +220,7 @@ Variants {
                             radius: barSettings.barRadius
                             color:  Qt.darker(theme.background, 1.15)
                             border {
-                                width: 2
+                                width: barSettings.borderThickness
                                 color: modelData.urgency === 1 ? theme.color1
                                      : modelData.urgency === 0 ? theme.color4
                                      : theme.color2
@@ -220,7 +242,7 @@ Variants {
                                         height: 32
                                         radius: barSettings.barRadius
                                         color:  Qt.darker(theme.background, 1.2)
-                                        border { width: 1; color: theme.muted }
+                                        border { width: barSettings.borderThickness; color: theme.muted }
 
                                         Text {
                                             anchors.centerIn: parent
@@ -261,7 +283,7 @@ Variants {
                                         height: 24
                                         radius: barSettings.barRadius
                                         color:  "transparent"
-                                        border { width: 1; color: theme.muted }
+                                        border { width: barSettings.borderThickness; color: theme.muted }
 
                                         Text {
                                             anchors.centerIn: parent

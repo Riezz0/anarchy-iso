@@ -11,10 +11,10 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Io
 
 Variants {
     model: barSettings.popupScreens()
@@ -39,13 +39,57 @@ Variants {
 
             margins { left: 10; right: 10; top: 10; bottom: 10 }
 
+            Process {
+                id: bluemanProc
+                command: ["blueman-manager"]
+                running: false
+            }
+
+            property var scratchpadOpenClasses: []
+
+            Process {
+                id: clientsProc
+                command: ["hyprctl", "clients", "-j"]
+                running: false
+                stdout: StdioCollector {
+                    onStreamFinished: {
+                        try {
+                            var data = JSON.parse(text())
+                            var found = []
+                            for (var i = 0; i < data.length; i++) {
+                                var cls = data[i].class || ""
+                                if (cls === "nautipad" || cls === "termpad" || cls === "vimpad" || cls === "codipad")
+                                    found.push(cls)
+                            }
+                            barWindow.scratchpadOpenClasses = found
+                        } catch(e) {}
+                    }
+                }
+            }
+
+            Timer {
+                interval: 1000
+                running: true
+                repeat: true
+                onTriggered: {
+                    clientsProc.running = false
+                    clientsProc.running = true
+                }
+            }
+
         Rectangle {
             id:           barBackground
             anchors.fill: parent
-            color:        theme.background
-            opacity:      0.95
+            color:        "transparent"
             radius: barSettings.barRadius
-            border { color: theme.color2; width: 2 }
+
+            Rectangle {
+                anchors.fill: parent
+                color:        theme.background
+                opacity:      barSettings.barOpacity
+                radius: barSettings.barRadius
+                border { color: theme.color2; width: barSettings.borderThickness }
+            }
 
             RowLayout {
                 anchors {
@@ -64,7 +108,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color2 }
+                    border { width: barSettings.borderThickness; color: theme.color2 }
 
                     property bool hovered: false
 
@@ -98,7 +142,7 @@ Variants {
                     id:     workspaceContainer
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { color: theme.color4; width: 2 }
+                    border { color: theme.color4; width: barSettings.borderThickness }
 
                     Layout.alignment: Qt.AlignVCenter
                     implicitWidth:    workspaceRow.implicitWidth + 20
@@ -181,8 +225,9 @@ Variants {
                         anchors.fill: parent
                         color:        "transparent"
                         radius: barSettings.barRadius
+                        property bool hovered: false
                         border {
-                            width: 2
+                            width: barSettings.borderThickness
                             color: theme.color2
                         }
 
@@ -192,7 +237,8 @@ Variants {
                             anchors.centerIn: parent
                             text:           bt.btIcon()
                             font.pixelSize: 18
-                            color:          bt.btColor()
+                            color:          btRect.hovered ? theme.foreground : bt.btColor()
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
                     }
 
@@ -206,11 +252,12 @@ Variants {
                             if (mouse.button === Qt.RightButton) {
                                 bt.toggle()
                             } else {
-                                root.btPopupOpen = !root.btPopupOpen
+                                bluemanProc.running = true
                             }
                         }
 
                         onContainsMouseChanged: {
+                            btRect.hovered = containsMouse
                             btRect.border.color = containsMouse ? theme.muted : theme.color2
                         }
                     }
@@ -223,7 +270,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color2 }
+                    border { width: barSettings.borderThickness; color: theme.color2 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -233,7 +280,7 @@ Variants {
                         anchors.centerIn: parent
                         text:           "󰍛"
                         font.pixelSize: 18
-                        color:          tempModule.hovered ? Qt.lighter(theme.color4, 1.3) : theme.color4
+                            color:          tempModule.hovered ? theme.foreground : theme.color4
                         Behavior on color { ColorAnimation { duration: 120 } }
                     }
 
@@ -256,7 +303,7 @@ Variants {
                     id:     weatherBtn
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Layout.alignment: Qt.AlignVCenter
                     implicitHeight:   40
@@ -273,7 +320,8 @@ Variants {
                             anchors.verticalCenter: parent.verticalCenter
                             text:           weather.weatherIconText()
                             font.pixelSize: 14
-                            color:          theme.color4
+                            color:          weatherBtn.hovered ? theme.foreground : theme.color4
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
                         Text {
@@ -307,7 +355,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -322,7 +370,8 @@ Variants {
                             anchors.verticalCenter: parent.verticalCenter
                             text:           kbd.layoutIcon()
                             font.pixelSize: 14
-                            color:          kbd.layoutColor()
+                            color:          kbdBtn.hovered ? theme.foreground : kbd.layoutColor()
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
                         Text {
@@ -356,7 +405,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color5 }
+                    border { width: barSettings.borderThickness; color: theme.color5 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -366,7 +415,8 @@ Variants {
                         anchors.centerIn: parent
                         text:           "󰒓"
                         font.pixelSize: 18
-                        color:          theme.color5
+                        color:          settingsBtn.hovered ? theme.foreground : theme.color5
+                        Behavior on color { ColorAnimation { duration: 120 } }
                     }
 
                     MouseArea {
@@ -391,7 +441,7 @@ Variants {
                     id:     netBtn
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Layout.alignment: Qt.AlignVCenter
                     implicitHeight:   40
@@ -408,7 +458,8 @@ Variants {
                             anchors.verticalCenter: parent.verticalCenter
                             text:           net.networkIcon()
                             font.pixelSize: 14
-                            color:          net.networkColor()
+                            color:          netBtn.hovered ? theme.foreground : net.networkColor()
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
                         Text {
@@ -442,7 +493,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color6 }
+                    border { width: barSettings.borderThickness; color: theme.color6 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -450,9 +501,10 @@ Variants {
 
                     Text {
                         anchors.centerIn: parent
-                        text:           "󰔉"
+                        text:           "󰏘"
                         font.pixelSize: 18
-                        color:          theme.color6
+                        color:          themesBtn.hovered ? theme.foreground : theme.color6
+                        Behavior on color { ColorAnimation { duration: 120 } }
                     }
 
                     MouseArea {
@@ -476,7 +528,7 @@ Variants {
                     implicitHeight: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: updatesBtn.hovered ? theme.muted : (updates.updatesAvailable ? theme.color3 : theme.color4) }
+                    border { width: barSettings.borderThickness; color: updatesBtn.hovered ? theme.muted : (updates.updatesAvailable ? theme.color3 : theme.color4) }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -491,7 +543,8 @@ Variants {
                             anchors.verticalCenter: parent.verticalCenter
                             text:           updates.updateIcon()
                             font.pixelSize: 14
-                            color:          updates.updateColor()
+                            color:          updatesBtn.hovered ? theme.foreground : updates.updateColor()
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
                         Text {
@@ -549,7 +602,7 @@ Variants {
                         color:        "transparent"
                         radius: barSettings.barRadius
                         border {
-                            width: 2
+                            width: barSettings.borderThickness
                             color: notifButton.hovered ? theme.muted
                                  : notifs.hasUnread ? theme.color1
                                  : theme.color4
@@ -561,7 +614,8 @@ Variants {
                             anchors.centerIn: parent
                             text:           notifs.notifIcon()
                             font.pixelSize: 18
-                            color:          notifs.notifColor()
+                            color:          notifButton.hovered ? theme.foreground : notifs.notifColor()
+                            Behavior on color { ColorAnimation { duration: 120 } }
                         }
 
                         // Unread badge
@@ -619,8 +673,9 @@ Variants {
                         anchors.fill: parent
                         color:        "transparent"
                         radius: barSettings.barRadius
+                        property bool hovered: false
                         border {
-                            width: 2
+                            width: barSettings.borderThickness
                             color: audio.volumeMuted ? theme.color1 : theme.color4
                         }
 
@@ -634,7 +689,8 @@ Variants {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text:           audio.volumeIcon()
                                 font.pixelSize: 18
-                                color:          audio.volumeMuted ? theme.color1 : theme.color2
+                                color:          volumeRect.hovered ? theme.foreground : (audio.volumeMuted ? theme.color1 : theme.color2)
+                                Behavior on color { ColorAnimation { duration: 120 } }
                             }
 
                             Text {
@@ -670,6 +726,7 @@ Variants {
                         }
 
                         onContainsMouseChanged: {
+                            volumeRect.hovered = containsMouse
                             volumeRect.border.color = containsMouse
                                 ? theme.muted
                                 : (audio.volumeMuted ? theme.color1 : theme.color4)
@@ -712,9 +769,9 @@ Variants {
                     width:            40
                     height:           40
                     radius: barSettings.barRadius
-                    color:            root.powerMenuOpen ? theme.color1 : Qt.darker(theme.background, 0.8)
+                    color:            root.powerMenuOpen ? theme.color1 : "transparent"
                     opacity:          powerBtnMouse.containsMouse ? 0.6 : 1.0
-                    border { color: theme.color1; width: 2 }
+                    border { color: theme.color1; width: barSettings.borderThickness }
                     Layout.alignment: Qt.AlignVCenter
 
                     Behavior on opacity { NumberAnimation { duration: 150 } }
@@ -744,9 +801,8 @@ Variants {
             width:  200
             height: 40
             radius: barSettings.barRadius
-            color:  theme.background
-            opacity: 0.95
-            border { width: 2; color: theme.color3 }
+            color:  "transparent"
+            border { width: barSettings.borderThickness; color: theme.color3 }
             clip:   true
             z: 10
 
@@ -761,7 +817,8 @@ Variants {
                 font.pixelSize:   14
                 font.bold:        true
                 font.family:      "JetBrains Mono Nerd Font Mono"
-                color:            theme.muted
+                color:            salaatBtn.hovered ? theme.foreground : theme.muted
+                Behavior on color { ColorAnimation { duration: 120 } }
                 elide:            Text.ElideRight
                 width:            parent.width - 16
                 clip:             true

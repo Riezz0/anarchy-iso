@@ -20,8 +20,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: weatherPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -33,10 +35,22 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: weatherPopup
+            function onIsOpenChanged() {
+                if (weatherPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         // Click outside to close
         MouseArea {
             anchors.fill: parent
             onClicked:    weatherPopup.close()
+            opacity: weatherPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -49,8 +63,14 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: theme.color4 }
+            opacity:  weatherPopup.isOpen ? 0.95 : 0
+            scale:    weatherPopup.isOpen ? 1.0 : 0.95
+            y:        weatherPopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color4 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -71,6 +91,7 @@ Variants {
                     Text {
                         text:           weather.weatherIconText()
                         font.pixelSize: 36
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          theme.color4
                     }
 
@@ -126,14 +147,14 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
                             spacing: 8
 
                             Text {
-                                text:           "󱥋"
+                                text:           "󰔏"
                                 font.pixelSize: 24
                                 font.family:    "JetBrains Mono Nerd Font Mono"
                                 color:          theme.color6
@@ -166,7 +187,7 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
@@ -206,7 +227,7 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
@@ -246,14 +267,14 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
                             spacing: 8
 
                             Text {
-                                text:           "󰖂"
+                                text:           "󰊚"
                                 font.pixelSize: 24
                                 font.family:    "JetBrains Mono Nerd Font Mono"
                                 color:          theme.color2
@@ -286,7 +307,7 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
@@ -326,7 +347,7 @@ Variants {
                         Layout.alignment: Qt.AlignHCenter
                         radius:   barSettings.barRadius
                         color: "transparent"
-                        border { width: 2; color: Qt.darker(theme.muted, 1.5) }
+                        border { width: barSettings.borderThickness; color: Qt.darker(theme.muted, 1.5) }
 
                         Column {
                             anchors.centerIn: parent
@@ -400,7 +421,7 @@ Variants {
                     implicitHeight: 32
                     radius:   barSettings.barRadius
                     color:  "transparent"
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Text {
                         anchors.centerIn: parent

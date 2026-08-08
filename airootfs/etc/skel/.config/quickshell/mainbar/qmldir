@@ -4,7 +4,6 @@ Bluetooth 1.0 Bluetooth.qml
 Recorder 1.0 Recorder.qml
 Weather 1.0 Weather.qml
 Keyboard 1.0 Keyboard.qml
-SystemTray 1.0 SystemTray.qml
 Network 1.0 Network.qml
 SystemStats 1.0 SystemStats.qml
 Updates 1.0 Updates.qml

@@ -8,8 +8,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: themesPopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -21,12 +23,25 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: themesPopup
+            function onIsOpenChanged() {
+                if (themesPopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         MouseArea {
             anchors.fill: parent
             onClicked:    themesPopup.close()
+            opacity: themesPopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
+            id: themesPanel
             anchors.bottom:     parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottomMargin: 10
@@ -34,8 +49,14 @@ Variants {
             height:   popupColumn.implicitHeight + 32
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.95
-            border { width: 2; color: theme.color6 }
+            opacity:  themesPopup.isOpen ? 0.95 : 0
+            scale:    themesPopup.isOpen ? 1.0 : 0.95
+            y:        themesPopup.isOpen ? 0 : 20
+            border { width: barSettings.borderThickness; color: theme.color6 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -51,20 +72,22 @@ Variants {
                 // Header
                 RowLayout {
                     Layout.fillWidth: true
+                    spacing: 10
                     Layout.bottomMargin: 4
-                    spacing: 8
 
                     Text {
-                        text:           "󰔉"
-                        font.pixelSize: 18
+                        text:           "󰏘"
+                        font.pixelSize: 22
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          theme.color6
                     }
 
                     Text {
                         text:           "Themes"
-                        font.pixelSize: 14
+                        font.pixelSize: 16
                         font.bold:      true
                         color:          theme.foreground
+                        Layout.fillWidth: true
                     }
                 }
 
@@ -110,7 +133,7 @@ Variants {
                                 height: 140
                                 radius:   barSettings.barRadius
                                 color:  "transparent"
-                                border { width: 2; color: theme.muted }
+                                border { width: barSettings.borderThickness; color: theme.muted }
 
                                 property bool hovered: false
 

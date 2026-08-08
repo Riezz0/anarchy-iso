@@ -229,23 +229,23 @@ Item {
         const c = parseInt(code)
 
         // Clear
-        if (c === 0)                          return "󰖨"
+        if (c === 0)                          return "󰖙"
         // Partly cloudy
-        if (c === 1 || c === 2)               return "󰖏"
+        if (c === 1 || c === 2)               return "󰖕"
         // Overcast
         if (c === 3)                          return "󰖐"
         // Fog
-        if (c >= 45 && c <= 48)              return "󰖌"
+        if (c >= 45 && c <= 48)              return "󰖑"
         // Drizzle
-        if (c >= 51 && c <= 67)              return "󰖒"
+        if (c >= 51 && c <= 67)              return "󰖗"
         // Snow
-        if (c >= 71 && c <= 77)              return "󰖓"
+        if (c >= 71 && c <= 77)              return "󰖘"
         // Rain showers
-        if (c >= 80 && c <= 82)              return "󰖒"
+        if (c >= 80 && c <= 82)              return "󰖗"
         // Snow showers
-        if (c >= 85 && c <= 86)              return "󰖓"
+        if (c >= 85 && c <= 86)              return "󰖘"
         // Thunderstorm
-        if (c >= 95 && c <= 99)              return "󰖓"
+        if (c >= 95 && c <= 99)              return "󰖘"
 
         return "󰖐"
     }

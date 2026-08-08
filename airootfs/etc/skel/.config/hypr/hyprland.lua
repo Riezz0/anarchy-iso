@@ -9,6 +9,7 @@ require("modules.input")
 require("modules.layout")
 require("modules.look")
 require("modules.rules")
+require("modules.scratchpads")
 -- hyprmon: managed monitor profile include
 require("hyprmon")
 

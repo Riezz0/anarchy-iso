@@ -35,6 +35,7 @@ Item {
     property real   ramUsage:    0
     property real   ramUsedGB:   0
     property real   ramTotalGB:  0
+    property var    drives:      []
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Processes
@@ -120,6 +121,66 @@ Item {
         }
     }
 
+    // ── Disk Usage ────────────────────────────────────────────────────────
+    Process {
+        id:      diskProc
+        command: ["bash", "-c",
+            "lsblk -b -d -n -o NAME,SIZE 2>/dev/null | grep -E '^(sd|nvme)' | while read dname dsize; do " +
+            "mp=$(findmnt -n -r -o TARGET /dev/${dname}p2 2>/dev/null | head -1); " +
+            "[ -z \"$mp\" ] && mp=$(findmnt -n -r -o TARGET /dev/${dname}1 2>/dev/null | head -1); " +
+            "[ -z \"$mp\" ] && mp=$(findmnt -n -r -o TARGET /dev/${dname} 2>/dev/null | head -1); " +
+            "if [ -n \"$mp\" ]; then " +
+            "df -B1 \"$mp\" 2>/dev/null | tail -1 | awk -v dn=\"$dname\" -v ds=\"$dsize\" '{print dn\"|\"ds\"|\"$2\"|\"$3\"|\"$4}'; " +
+            "else " +
+            "echo \"$dname|$dsize|--|--|--\"; " +
+            "fi; " +
+            "done"
+        ]
+        running: false
+
+        property string output: ""
+
+        stdout: SplitParser {
+            onRead: line => { diskProc.output += line + "\n" }
+        }
+
+        onRunningChanged: {
+            if (!running && diskProc.output) {
+                var drives = []
+                var lines = diskProc.output.trim().split("\n")
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim()
+                    if (line.length === 0) continue
+                    var parts = line.split("|")
+                    if (parts.length >= 5) {
+                        var totalBytes = parseInt(parts[2])
+                        var usedBytes = parseInt(parts[3])
+                        var availBytes = parseInt(parts[4])
+                        var driveSize = parseInt(parts[1])
+                        drives.push({
+                            name: parts[0],
+                            size: isNaN(driveSize) ? "--" : formatBytes(driveSize),
+                            totalBytes: isNaN(totalBytes) ? 0 : totalBytes,
+                            usedBytes: isNaN(usedBytes) ? 0 : usedBytes,
+                            total: isNaN(totalBytes) || totalBytes <= 0 ? "--" : formatBytes(totalBytes),
+                            used: isNaN(usedBytes) || usedBytes <= 0 ? "--" : formatBytes(usedBytes),
+                            avail: isNaN(availBytes) || availBytes <= 0 ? "--" : formatBytes(availBytes)
+                        })
+                    }
+                }
+                statsRoot.drives = drives
+                diskProc.output = ""
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (bytes >= 1099511627776) return (bytes / 1099511627776).toFixed(1) + "T"
+            if (bytes >= 1073741824) return (bytes / 1073741824).toFixed(1) + "G"
+            if (bytes >= 1048576) return (bytes / 1048576).toFixed(0) + "M"
+            return bytes + "B"
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     // Timer - Poll every 3 seconds
     // ═══════════════════════════════════════════════════════════════════════════
@@ -133,6 +194,7 @@ Item {
             if (!gpuTempProc.running) gpuTempProc.running = true
             if (!cpuTempProc.running) cpuTempProc.running = true
             if (!usageProc.running)   usageProc.running = true
+            if (!diskProc.running)    diskProc.running = true
         }
     }
 }

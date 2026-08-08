@@ -19,8 +19,10 @@ Variants {
 
     PanelWindow {
         screen:  modelData
-        visible: volumePopup.isOpen
+        visible: panelVisible
         required property var modelData
+
+        property bool panelVisible: false
 
         anchors { top: true; bottom: true; left: true; right: true }
 
@@ -32,10 +34,22 @@ Variants {
             ? WlrKeyboardFocus.OnDemand
             : WlrKeyboardFocus.None
 
+        Connections {
+            target: volumePopup
+            function onIsOpenChanged() {
+                if (volumePopup.isOpen) { panelVisible = true }
+                else { hideTimer.start() }
+            }
+        }
+
+        Timer { id: hideTimer; interval: 220; onTriggered: panelVisible = false }
+
         // Click outside to close
         MouseArea {
             anchors.fill: parent
             onClicked:    volumePopup.close()
+            opacity: volumePopup.isOpen ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 150 } }
         }
 
         Rectangle {
@@ -48,8 +62,14 @@ Variants {
             height:   implicitHeight
             radius:   barSettings.barRadius
             color:    theme.background
-            opacity:  0.90
-            border { width: 2; color: theme.color2 }
+            opacity:  volumePopup.isOpen ? 0.90 : 0
+            scale:    volumePopup.isOpen ? 1.0 : 0.95
+            y:        volumePopup.isOpen ? 0 : -20
+            border { width: barSettings.borderThickness; color: theme.color2 }
+
+            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -70,6 +90,7 @@ Variants {
                     Text {
                         text:           audio.volumeIcon()
                         font.pixelSize: 22
+                        font.family:    "JetBrains Mono Nerd Font Mono"
                         color:          audio.volumeMuted ? theme.color1 : theme.color2
                     }
 
@@ -97,7 +118,7 @@ Variants {
                     implicitHeight: 14
                     radius:   barSettings.barRadius
                     color:  Qt.darker(theme.background, 1.3)
-                    border { width: 2; color: theme.color4 }
+                    border { width: barSettings.borderThickness; color: theme.color4 }
 
                     Rectangle {
                         anchors {
@@ -141,7 +162,7 @@ Variants {
                         implicitHeight: 28
                         radius:   barSettings.barRadius
                         color:  audio.volumeMuted ? theme.color1 : "transparent"
-                        border { width: 2; color: theme.color4 }
+                        border { width: barSettings.borderThickness; color: theme.color4 }
 
                         Text {
                             anchors.centerIn: parent
@@ -163,7 +184,7 @@ Variants {
                         implicitHeight: 28
                         radius:   barSettings.barRadius
                         color:  "transparent"
-                        border { width: 2; color: theme.color4 }
+                        border { width: barSettings.borderThickness; color: theme.color4 }
 
                         Text {
                             anchors.centerIn: parent
