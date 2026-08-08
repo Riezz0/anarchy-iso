@@ -9,7 +9,7 @@ require("modules.input")
 require("modules.layout")
 require("modules.look")
 require("modules.rules")
-
+require("hyprmon")
 -- Example window rules that are useful
 
 local suppressMaximizeRule = hl.window_rule({

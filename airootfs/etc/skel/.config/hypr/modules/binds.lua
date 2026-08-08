@@ -7,11 +7,10 @@ hl.bind("SUPER + M", hl.dsp.exec_cmd("uwsm stop"),                              
 hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"),                                                                           { description = "Lock Screen" })
 
 -- Scratchpads
--- hl.bind("SUPER + E", hl.dsp.exec_cmd("pypr toggle nautipad"),                                                               { description = "File Explorer Scratchpad" })
-hl.bind("SUPER + SHIFT + P", hl.dsp.exec_cmd("pypr toggle pyprpad"),                                                        { description = "Pyprpad Scratchpad" })
-hl.bind("SUPER + T", hl.dsp.exec_cmd("pypr toggle codipad"),                                                                { description = "VS Code Scratchpad" })
-hl.bind("SUPER + SHIFT + RETURN", hl.dsp.exec_cmd("pypr toggle termpad"),                                                   { description = "Terminal Scratchpad" })
-hl.bind("SUPER + V", hl.dsp.exec_cmd("pypr toggle vimpad"),                                                                 { description = "Neovim Scratchpad" })
+hl.bind("SUPER + E", hl.dsp.exec_cmd("hyprscratch toggle nautipad"),                                                        { description = "File Explorer Scratchpad" })
+hl.bind("SUPER + T", hl.dsp.exec_cmd("hyprscratch toggle codipad"),                                                         { description = "VS Code Scratchpad" })
+hl.bind("SUPER + SHIFT + RETURN", hl.dsp.exec_cmd("hyprscratch toggle termpad"),                                            { description = "Terminal Scratchpad" })
+hl.bind("SUPER + V", hl.dsp.exec_cmd("hyprscratch toggle vimpad"),                                                          { description = "Neovim Scratchpad" })
 
 -- App Launch
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("pkill rofi || ~/.config/rofi/launcher/launcher.sh"),                              { description = "App Launcher" })
