@@ -32,3 +32,6 @@ BarSettingsPopup 1.0 BarSettingsPopup.qml
 QuranPlayer 1.0 QuranPlayer.qml
 QuranText 1.0 QuranText.qml
 QuranPlayerPopup 1.0 QuranPlayerPopup.qml
+UserAvatar 1.0 UserAvatar.qml
+SidePanel 1.0 SidePanel.qml
+Widget2 1.0 Widget2.qml

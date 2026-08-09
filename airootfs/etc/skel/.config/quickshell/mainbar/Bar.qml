@@ -16,6 +16,7 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 
+
 Variants {
     model: barSettings.popupScreens()
 
@@ -45,43 +46,12 @@ Variants {
                 running: false
             }
 
-            property var scratchpadOpenClasses: []
-
-            Process {
-                id: clientsProc
-                command: ["hyprctl", "clients", "-j"]
-                running: false
-                stdout: StdioCollector {
-                    onStreamFinished: {
-                        try {
-                            var data = JSON.parse(text())
-                            var found = []
-                            for (var i = 0; i < data.length; i++) {
-                                var cls = data[i].class || ""
-                                if (cls === "nautipad" || cls === "termpad" || cls === "vimpad" || cls === "codipad")
-                                    found.push(cls)
-                            }
-                            barWindow.scratchpadOpenClasses = found
-                        } catch(e) {}
-                    }
-                }
-            }
-
-            Timer {
-                interval: 1000
-                running: true
-                repeat: true
-                onTriggered: {
-                    clientsProc.running = false
-                    clientsProc.running = true
-                }
-            }
-
         Rectangle {
             id:           barBackground
             anchors.fill: parent
             color:        "transparent"
             radius: barSettings.barRadius
+            visible:      barSettings.loaded
 
             Rectangle {
                 anchors.fill: parent
@@ -99,7 +69,7 @@ Variants {
                     topMargin:    10
                     bottomMargin: 10
                 }
-                spacing: 10
+                spacing: 5
 
                 // ── Arch Logo //
                 Rectangle {
@@ -108,15 +78,24 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color2 }
+                    border { width: barSettings.borderThickness; color: hovered ? theme.muted : theme.color2 }
 
                     property bool hovered: false
+                    property string archLogoPath: "file://" + Quickshell.env("HOME") + "/.config/quickshell/assets/arch.png"
+                    property int archLogoVersion: 0
+
+                    FileView {
+                        id: archLogoWatcher
+                        path: Quickshell.env("HOME") + "/.config/quickshell/assets/arch.png"
+                        watchChanges: true
+                        onFileChanged: archBtn.archLogoVersion++
+                    }
 
                     Image {
                         anchors.centerIn:  parent
                         width:             30
                         height:            30
-                        source:            "file://" + Quickshell.env("HOME") + "/.config/quickshell/assets/arch.png"
+                        source:            archBtn.archLogoPath + "?v=" + archBtn.archLogoVersion
                         smooth:            true
                         mipmap:            true
                         fillMode:          Image.PreserveAspectFit
@@ -132,9 +111,6 @@ Variants {
                         onExited:     archBtn.hovered = false
                         onClicked:    { root.keybindsPopupOpen = !root.keybindsPopupOpen }
                     }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
-                    onHoveredChanged: { border.color = hovered ? theme.muted : theme.color2 }
                 }
 
                 // ── Workspaces ────────────────────────────────────────────
@@ -169,9 +145,9 @@ Variants {
                             Rectangle {
                                 required property int index
                                 property int workspaceId: index + 1
-                                width:  25
-                                height: 25
-                                radius: barSettings.barRadius
+                                width:  barSettings.workspaceStyle === "dots" ? 25 : 25
+                                height: barSettings.workspaceStyle === "dots" ? 10 : 25
+                                radius: barSettings.workspaceStyle === "dots" ? 5 : barSettings.barRadius
 
                                 property bool isActive: Hyprland.focusedWorkspace
                                     && Hyprland.focusedWorkspace.id === workspaceId
@@ -185,10 +161,11 @@ Variants {
                                     return false
                                 }
 
-                                color:        isActive ? theme.color2 : (hasWindows ? Qt.darker(theme.background, 1.25) : "transparent")
+                                color:        isActive ? theme.color2 : (barSettings.workspaceStyle === "dots" ? (hasWindows ? Qt.darker(theme.background, 1.25) : theme.muted) : (hasWindows ? Qt.darker(theme.background, 1.25) : "transparent"))
 
                                 Text {
                                     anchors.centerIn: parent
+                                    visible:          barSettings.workspaceStyle !== "dots"
                                     text:             parent.workspaceId.toString()
                                     color:            parent.isActive ? theme.background : (parent.hasWindows ? theme.color4 : theme.muted)
                                     font.pixelSize:   14
@@ -212,191 +189,6 @@ Variants {
                     }
                 }
 
-                // ── Bluetooth ────────────────────────────────────────────
-                Item {
-                    id:     btButton
-                    implicitWidth:  40
-                    implicitHeight: 40
-
-                    Layout.alignment: Qt.AlignVCenter
-
-                    Rectangle {
-                        id:           btRect
-                        anchors.fill: parent
-                        color:        "transparent"
-                        radius: barSettings.barRadius
-                        property bool hovered: false
-                        border {
-                            width: barSettings.borderThickness
-                            color: theme.color2
-                        }
-
-                        Behavior on border.color { ColorAnimation { duration: 120 } }
-
-                        Text {
-                            anchors.centerIn: parent
-                            text:           bt.btIcon()
-                            font.pixelSize: 18
-                            color:          btRect.hovered ? theme.foreground : bt.btColor()
-                            Behavior on color { ColorAnimation { duration: 120 } }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill:     parent
-                        hoverEnabled:     true
-                        cursorShape:      Qt.PointingHandCursor
-                        acceptedButtons:  Qt.LeftButton | Qt.RightButton
-
-                        onClicked: mouse => {
-                            if (mouse.button === Qt.RightButton) {
-                                bt.toggle()
-                            } else {
-                                bluemanProc.running = true
-                            }
-                        }
-
-                        onContainsMouseChanged: {
-                            btRect.hovered = containsMouse
-                            btRect.border.color = containsMouse ? theme.muted : theme.color2
-                        }
-                    }
-                }
-
-                // ── System Resources ─────────────────────────────────────
-                Rectangle {
-                    id:     tempModule
-                    width:  40
-                    height: 40
-                    radius: barSettings.barRadius
-                    color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color2 }
-
-                    Layout.alignment: Qt.AlignVCenter
-
-                    property bool hovered: false
-
-                    Text {
-                        anchors.centerIn: parent
-                        text:           "󰍛"
-                        font.pixelSize: 18
-                            color:          tempModule.hovered ? theme.foreground : theme.color4
-                        Behavior on color { ColorAnimation { duration: 120 } }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape:  Qt.PointingHandCursor
-                        onClicked:    root.tempPopupOpen = !root.tempPopupOpen
-                        onContainsMouseChanged: {
-                            tempModule.hovered = containsMouse
-                            tempModule.border.color = containsMouse ? theme.muted : theme.color2
-                        }
-                    }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
-                }
-
-                // ── Weather //─
-                Rectangle {
-                    id:     weatherBtn
-                    radius: barSettings.barRadius
-                    color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color4 }
-
-                    Layout.alignment: Qt.AlignVCenter
-                    implicitHeight:   40
-                    implicitWidth:    weatherRow.implicitWidth + 28
-
-                    property bool hovered: false
-
-                    Row {
-                        id:               weatherRow
-                        anchors.centerIn: parent
-                        spacing:          6
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           weather.weatherIconText()
-                            font.pixelSize: 14
-                            color:          weatherBtn.hovered ? theme.foreground : theme.color4
-                            Behavior on color { ColorAnimation { duration: 120 } }
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           weather.loaded ? weather.tempDisplay() : "--"
-                            font.pixelSize: 14
-                            font.bold:      true
-                            font.family:    "JetBrains Mono Nerd Font Mono"
-                            color:          theme.muted
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill:    parent
-                        hoverEnabled:    true
-                        cursorShape:     Qt.PointingHandCursor
-                        onClicked:       root.weatherPopupOpen = !root.weatherPopupOpen
-                        onContainsMouseChanged: {
-                            weatherBtn.hovered = containsMouse
-                            weatherBtn.border.color = containsMouse ? theme.muted : theme.color4
-                        }
-                    }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
-                }
-
-                // ── Keyboard Layout ──────────────────────────────────────
-                Rectangle {
-                    id:     kbdBtn
-                    width:  kbdRow.implicitWidth + 20
-                    height: 40
-                    radius: barSettings.barRadius
-                    color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color4 }
-
-                    Layout.alignment: Qt.AlignVCenter
-
-                    property bool hovered: false
-
-                    Row {
-                        id:               kbdRow
-                        anchors.centerIn: parent
-                        spacing:          6
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           kbd.layoutIcon()
-                            font.pixelSize: 14
-                            color:          kbdBtn.hovered ? theme.foreground : kbd.layoutColor()
-                            Behavior on color { ColorAnimation { duration: 120 } }
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           kbd.loaded ? kbd.layoutLabel : "--"
-                            font.pixelSize: 13
-                            font.bold:      true
-                            font.family:    "JetBrains Mono Nerd Font Mono"
-                            color:          theme.muted
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill:    parent
-                        hoverEnabled:    true
-                        cursorShape:     Qt.PointingHandCursor
-                        onClicked:       root.runCommand("python3 ~/.config/xkb/symbols/my_ar.py")
-                        onContainsMouseChanged: {
-                            kbdBtn.hovered = containsMouse
-                            kbdBtn.border.color = containsMouse ? theme.muted : theme.color4
-                        }
-                    }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
-                }
 
                 // ── Settings ────────────────────────────────────────────
                 Rectangle {
@@ -405,7 +197,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color5 }
+                    border { width: barSettings.borderThickness; color: hovered ? theme.muted : theme.color5 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -426,65 +218,12 @@ Variants {
                         onClicked:    root.settingsPopupOpen = !root.settingsPopupOpen
                         onContainsMouseChanged: {
                             settingsBtn.hovered = containsMouse
-                            settingsBtn.border.color = containsMouse ? theme.muted : theme.color5
                         }
                     }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
                 }
 
                 // ── Center Spacer ─────────────────────────────────────────
                 Item { Layout.fillWidth: true }
-
-                // ── Network //─
-                Rectangle {
-                    id:     netBtn
-                    radius: barSettings.barRadius
-                    color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color4 }
-
-                    Layout.alignment: Qt.AlignVCenter
-                    implicitHeight:   40
-                    implicitWidth:    netRow.implicitWidth + 28
-
-                    property bool hovered: false
-
-                    Row {
-                        id:               netRow
-                        anchors.centerIn: parent
-                        spacing:          6
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           net.networkIcon()
-                            font.pixelSize: 14
-                            color:          netBtn.hovered ? theme.foreground : net.networkColor()
-                            Behavior on color { ColorAnimation { duration: 120 } }
-                        }
-
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text:           net.loaded ? net.displayText() : "--"
-                            font.pixelSize: 12
-                            font.bold:      true
-                            font.family:    "JetBrains Mono Nerd Font Mono"
-                            color:          theme.muted
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill:    parent
-                        hoverEnabled:    true
-                        cursorShape:     Qt.PointingHandCursor
-                        onClicked:       root.networkPopupOpen = !root.networkPopupOpen
-                        onContainsMouseChanged: {
-                            netBtn.hovered = containsMouse
-                            netBtn.border.color = containsMouse ? theme.muted : theme.color4
-                        }
-                    }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
-                }
 
                 // ── Themes //──
                 Rectangle {
@@ -493,7 +232,7 @@ Variants {
                     height: 40
                     radius: barSettings.barRadius
                     color:  "transparent"
-                    border { width: barSettings.borderThickness; color: theme.color6 }
+                    border { width: barSettings.borderThickness; color: hovered ? theme.muted : theme.color6 }
 
                     Layout.alignment: Qt.AlignVCenter
 
@@ -514,11 +253,8 @@ Variants {
                         onClicked:    root.themesPopupOpen = !root.themesPopupOpen
                         onContainsMouseChanged: {
                             themesBtn.hovered = containsMouse
-                            themesBtn.border.color = containsMouse ? theme.muted : theme.color6
                         }
                     }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
                 }
 
                 // ── Updates ──────────────────────────────────────────────
@@ -575,17 +311,9 @@ Variants {
                             updatesBtn.hovered = containsMouse
                         }
                     }
-
-                    Behavior on border.color { ColorAnimation { duration: 120 } }
                 }
 
                 //─
-                Recorder {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: 40
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
                 // ── Notifications ─────────────────────────────────────────
                 Item {
                     id:     notifButton
@@ -607,8 +335,6 @@ Variants {
                                  : notifs.hasUnread ? theme.color1
                                  : theme.color4
                         }
-
-                        Behavior on border.color { ColorAnimation { duration: 120 } }
 
                         Text {
                             anchors.centerIn: parent
@@ -676,10 +402,8 @@ Variants {
                         property bool hovered: false
                         border {
                             width: barSettings.borderThickness
-                            color: audio.volumeMuted ? theme.color1 : theme.color4
+                            color: hovered ? theme.muted : (audio.volumeMuted ? theme.color1 : theme.color4)
                         }
-
-                        Behavior on border.color { ColorAnimation { duration: 120 } }
 
                         Row {
                             anchors.centerIn: parent
@@ -727,9 +451,6 @@ Variants {
 
                         onContainsMouseChanged: {
                             volumeRect.hovered = containsMouse
-                            volumeRect.border.color = containsMouse
-                                ? theme.muted
-                                : (audio.volumeMuted ? theme.color1 : theme.color4)
                         }
                     }
                 }
@@ -760,6 +481,47 @@ Variants {
                         onClicked:    root.calendarPopupOpen = !root.calendarPopupOpen
                         onContainsMouseChanged: {
                             clockLabel.color = containsMouse ? theme.color1 : theme.muted
+                        }
+                    }
+                }
+
+                // ── Widgets Toggle ─────────────────────────────────────────
+                Rectangle {
+                    id:     widgetsBtn
+                    width:  40
+                    height: 40
+                    radius: barSettings.barRadius
+                    color:  "transparent"
+                    border { width: barSettings.borderThickness; color: widgetsBtn.hovered || root.sidePanelOpen || root.widget2Open ? theme.muted : theme.color4 }
+
+                    Layout.alignment: Qt.AlignVCenter
+
+                    property bool hovered: false
+
+                    Text {
+                        anchors.centerIn: parent
+                        text:           "󰕰"
+                        font.pixelSize: 18
+                        color:          widgetsBtn.hovered || root.sidePanelOpen || root.widget2Open ? theme.foreground : theme.color4
+                        Behavior on color { ColorAnimation { duration: 120 } }
+                    }
+
+                    MouseArea {
+                        anchors.fill:     parent
+                        hoverEnabled:     true
+                        cursorShape:      Qt.PointingHandCursor
+                        acceptedButtons:  Qt.LeftButton | Qt.RightButton
+
+                        onClicked: mouse => {
+                            if (mouse.button === Qt.RightButton) {
+                                root.toggleWidget2()
+                            } else {
+                                root.toggleSidePanel()
+                            }
+                        }
+
+                        onContainsMouseChanged: {
+                            widgetsBtn.hovered = containsMouse
                         }
                     }
                 }
@@ -795,48 +557,141 @@ Variants {
             }
         }
 
-        // ── Salaat Widget (centered on screen, above bar) ─────────────
+        // ── Active Window Title (centered) ────────────────────────────
         Rectangle {
-            id:     salaatBtn
-            width:  200
-            height: 40
-            radius: barSettings.barRadius
-            color:  "transparent"
-            border { width: barSettings.borderThickness; color: theme.color3 }
-            clip:   true
+            id:     activeWindowBtn
             z: 10
+            visible: barSettings.loaded
+            radius: barSettings.barRadius
+            color:  theme.background
+            opacity: 0.85
+            border { width: barSettings.borderThickness; color: activeWindowBtn.hovered ? theme.muted : theme.color4 }
+
+            implicitWidth: 200
+            implicitHeight: 40
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter:   parent.verticalCenter
 
             property bool hovered: false
+            property string windowTitle: "Desktop"
+            property string windowClass: ""
 
-            Text {
-                anchors.centerIn: parent
-                text:             salaat._displayText || "Loading..."
-                font.pixelSize:   14
-                font.bold:        true
-                font.family:      "JetBrains Mono Nerd Font Mono"
-                color:            salaatBtn.hovered ? theme.foreground : theme.muted
-                Behavior on color { ColorAnimation { duration: 120 } }
-                elide:            Text.ElideRight
-                width:            parent.width - 16
-                clip:             true
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape:  Qt.PointingHandCursor
-                onClicked:    root.salaatPopupOpen = !root.salaatPopupOpen
-                onContainsMouseChanged: {
-                    salaatBtn.hovered = containsMouse
-                    salaatBtn.border.color = containsMouse ? theme.muted : theme.color3
+            // Scrolling marquee for long titles
+            Process {
+                id: hyprctlProc
+                command: ["hyprctl", "activewindow", "-j"]
+                property string buffer: ""
+                stdout: SplitParser {
+                    onRead: data => {
+                        hyprctlProc.buffer += data
+                    }
+                }
+                onRunningChanged: {
+                    if (!running && hyprctlProc.buffer.length > 0) {
+                        try {
+                            const info = JSON.parse(hyprctlProc.buffer)
+                            if (info && info.title !== undefined) {
+                                activeWindowBtn.windowTitle = info.title || ""
+                                activeWindowBtn.windowClass = info.class || ""
+                            }
+                        } catch (e) {}
+                        hyprctlProc.buffer = ""
+                    }
                 }
             }
 
-            Behavior on border.color { ColorAnimation { duration: 120 } }
+            Timer {
+                interval: 500
+                running: true
+                repeat: true
+                onTriggered: hyprctlProc.running = true
+            }
+
+            // Scrolling marquee for long titles
+            clip: true
+
+            Item {
+                id: marqueeContainer
+                anchors.fill: parent
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                clip: true
+
+                property real scrollOffset: 0
+                property bool needsScroll: false
+                property string displayText: activeWindowBtn.windowTitle || activeWindowBtn.windowClass || "Desktop"
+
+                Text {
+                    id: measureText
+                    visible: false
+                    text: marqueeContainer.displayText
+                    font.pixelSize: 13
+                    font.bold: true
+                    font.family: "JetBrains Mono Nerd Font Mono"
+                    onImplicitWidthChanged: marqueeContainer.checkScroll()
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    visible: !marqueeContainer.needsScroll
+                    text: marqueeContainer.displayText
+                    color: activeWindowBtn.hovered ? theme.foreground : theme.muted
+                    font.pixelSize: 13
+                    font.bold: true
+                    font.family: "JetBrains Mono Nerd Font Mono"
+                }
+
+                Item {
+                    visible: marqueeContainer.needsScroll
+                    anchors.fill: parent
+
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: -marqueeContainer.scrollOffset
+
+                        Repeater {
+                            model: 2
+                            Text {
+                                text: marqueeContainer.displayText
+                                color: activeWindowBtn.hovered ? theme.foreground : theme.muted
+                                font.pixelSize: 13
+                                font.bold: true
+                                font.family: "JetBrains Mono Nerd Font Mono"
+                            }
+                        }
+                    }
+                }
+
+                onWidthChanged: checkScroll()
+                Component.onCompleted: checkScroll()
+
+                function checkScroll() {
+                    needsScroll = measureText.implicitWidth > width
+                    scrollOffset = 0
+                    if (!needsScroll) {
+                        scrollTimer.stop()
+                    } else {
+                        scrollTimer.start()
+                    }
+                }
+
+                Timer {
+                    id: scrollTimer
+                    interval: 30
+                    repeat: true
+                    running: false
+                    onTriggered: {
+                        if (marqueeContainer.needsScroll) {
+                            marqueeContainer.scrollOffset += 1
+                            if (marqueeContainer.scrollOffset >= measureText.implicitWidth) {
+                                marqueeContainer.scrollOffset = 0
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -38,7 +38,9 @@ ShellRoot {
     property bool   archUpdatePopupOpen: false
     property bool   settingsPopupOpen: false
     property bool   quranPlayerPopupOpen: false
-    property string clockTime:        Qt.formatDateTime(new Date(), "hh:mm:ss")
+    property bool   sidePanelOpen: false
+    property bool   widget2Open: false
+    property string clockTime:        Qt.formatDateTime(new Date(), "hh:mm")
 
     // ── Theme ─────────────────────────────────────────────────────────────────
     Theme { id: theme }
@@ -60,10 +62,25 @@ ShellRoot {
     BarSettings   { id: barSettings }
     QuranPlayer   { id: quranPlayer }
     QuranText     { id: quranText }
+    UserAvatar    { id: userAvatar }
 
     // ── Power Menu Functions ──────────────────────────────────────────────────
     function togglePowerMenu() { powerMenuOpen = !powerMenuOpen }
     function closePowerMenu()  { powerMenuOpen = false }
+
+    // ── Side Panel Functions ──────────────────────────────────────────────────
+    function toggleSidePanel() {
+        if (!sidePanelOpen) widget2Open = false
+        sidePanelOpen = !sidePanelOpen
+    }
+    function closeSidePanel()  { sidePanelOpen = false }
+
+    // ── Widget 2 Functions ───────────────────────────────────────────────────
+    function toggleWidget2() {
+        if (!widget2Open) sidePanelOpen = false
+        widget2Open = !widget2Open
+    }
+    function closeWidget2()  { widget2Open = false }
 
     function runCommand(cmd) {
         powerProc.command = ["sh", "-c", cmd]
@@ -83,7 +100,7 @@ ShellRoot {
         running:          true
         repeat:           true
         onTriggered: {
-            root.clockTime = Qt.formatDateTime(new Date(), "hh:mm:ss")
+            root.clockTime = Qt.formatDateTime(new Date(), "hh:mm")
         }
     }
 
@@ -92,6 +109,12 @@ ShellRoot {
         name:        "powerMenuToggle"
         description: "Toggle the Quickshell power menu"
         onPressed:   root.togglePowerMenu()
+    }
+
+    GlobalShortcut {
+        name:        "sidePanelToggle"
+        description: "Toggle the Quickshell side panel"
+        onPressed:   root.toggleSidePanel()
     }
 
     // ── Popup Controllers ─────────────────────────────────────────────────────
@@ -177,6 +200,18 @@ ShellRoot {
     }
 
     Item {
+        id: sidePanel
+        property bool isOpen: root.sidePanelOpen
+        function close() { root.closeSidePanel() }
+    }
+
+    Item {
+        id: widget2
+        property bool isOpen: root.widget2Open
+        function close() { root.closeWidget2() }
+    }
+
+    Item {
         id: powerMenu
         property bool isOpen: root.powerMenuOpen
         function close() { root.closePowerMenu() }
@@ -201,4 +236,6 @@ ShellRoot {
     BarSettingsPopup      {}
     VolumeOsd          {}
     PowerMenu          {}
+    SidePanel          {}
+    Widget2            {}
 }

@@ -42,21 +42,17 @@ Variants {
 
         Rectangle {
             id: themesPanel
-            anchors.bottom:     parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottomMargin: 10
             width:    520
             height:   popupColumn.implicitHeight + 32
             radius:   barSettings.barRadius
             color:    theme.background
             opacity:  themesPopup.isOpen ? 0.95 : 0
-            scale:    themesPopup.isOpen ? 1.0 : 0.95
-            y:        themesPopup.isOpen ? 0 : 20
+            x:        (parent.width - width) / 2
+            y:        themesPopup.isOpen ? (parent.height - height) / 2 : -height - 20
             border { width: barSettings.borderThickness; color: theme.color6 }
 
-            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-            Behavior on scale   { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-            Behavior on y       { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+            Behavior on opacity { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
+            Behavior on y       { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
 
             MouseArea {
                 anchors.fill: parent
@@ -133,7 +129,7 @@ Variants {
                                 height: 140
                                 radius:   barSettings.barRadius
                                 color:  "transparent"
-                                border { width: barSettings.borderThickness; color: theme.muted }
+                                border { width: barSettings.borderThickness; color: hovered ? theme.color6 : theme.muted }
 
                                 property bool hovered: false
 
@@ -240,15 +236,12 @@ Variants {
                                     cursorShape:  Qt.PointingHandCursor
                                     onContainsMouseChanged: {
                                         parent.hovered = containsMouse
-                                        parent.border.color = containsMouse ? theme.color6 : theme.muted
                                     }
                                     onClicked: {
                                         themes.applyTheme(modelData.script)
                                         themesPopup.close()
                                     }
                                 }
-
-                                Behavior on border.color { ColorAnimation { duration: 120 } }
                             }
                         }
                     }

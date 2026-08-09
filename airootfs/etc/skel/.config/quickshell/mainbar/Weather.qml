@@ -41,6 +41,11 @@ Item {
     property string weatherIcon: ""
     property bool   loaded:      false
 
+    // Hourly forecast
+    property var hourlyTimes: []
+    property var hourlyTemps: []
+    property var hourlyCodes: []
+
     // ═══════════════════════════════════════════════════════════════════════════
     // Step 1: Fetch geolocation from ipinfo.io
     // ═══════════════════════════════════════════════════════════════════════════
@@ -82,6 +87,7 @@ Item {
                 + "?latitude=" + weatherRoot.latitude
                 + "&longitude=" + weatherRoot.longitude
                 + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover"
+                + "&hourly=temperature_2m,weather_code"
                 + "&daily=uv_index_max,visibility_max"
                 + "&timezone=auto"
             command = ["curl", "-s", "--max-time", "10", url]
@@ -173,10 +179,52 @@ Item {
             }
 
             weatherRoot.weatherIcon = getWeatherIcon(cc.weather_code)
+
+            // Hourly forecast
+            if (data.hourly && data.hourly.time) {
+                weatherRoot.hourlyTimes = data.hourly.time
+                weatherRoot.hourlyTemps = data.hourly.temperature_2m
+                weatherRoot.hourlyCodes = data.hourly.weather_code
+            }
+
             weatherRoot.loaded      = true
         } catch (e) {
             console.warn("Weather: failed to parse response:", e)
         }
+    }
+
+    function currentHourIndex() {
+        if (!hourlyTimes || hourlyTimes.length === 0) return 0
+        const now = new Date()
+        for (let i = 0; i < hourlyTimes.length; i++) {
+            const t = new Date(hourlyTimes[i])
+            if (t.getHours() === now.getHours() && t.getDate() === now.getDate()) {
+                return i
+            }
+        }
+        return 0
+    }
+
+    function getHourlyLabel(offset) {
+        if (!hourlyTimes || hourlyTimes.length === 0) return "--"
+        const idx = currentHourIndex() + offset
+        if (idx >= hourlyTimes.length) return "--"
+        const t = new Date(hourlyTimes[idx])
+        return Qt.formatDateTime(t, "h AP")
+    }
+
+    function getHourlyIcon(offset) {
+        if (!hourlyCodes || hourlyCodes.length === 0) return ""
+        const idx = currentHourIndex() + offset
+        if (idx >= hourlyCodes.length) return ""
+        return getWeatherIcon(hourlyCodes[idx])
+    }
+
+    function getHourlyTemp(offset) {
+        if (!hourlyTemps || hourlyTemps.length === 0) return "--"
+        const idx = currentHourIndex() + offset
+        if (idx >= hourlyTemps.length) return "--"
+        return Math.round(hourlyTemps[idx]).toString()
     }
 
     function getWindDir(degrees) {

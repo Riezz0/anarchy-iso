@@ -72,10 +72,8 @@ Item {
         color: "transparent"
         border {
             width: barSettings.borderThickness
-            color: recorder.recording ? theme.color1 : theme.color4
+            color: recorder.hovered ? theme.muted : (recorder.recording ? theme.color1 : theme.color4)
         }
-
-        Behavior on border.color { ColorAnimation { duration: 120 } }
 
         // ── Icon: filled circle (idle) or square (recording) ─────────────────
         Rectangle {
@@ -134,20 +132,5 @@ Item {
                 recorderProc.running = true
             }
         }
-    }
-
-    // ── Update border color based on hover + recording state ────────────────
-    function updateBorderColor() {
-        if (recorder.hovered) {
-            recBtn.border.color = theme.muted
-        } else {
-            recBtn.border.color = recorder.recording ? theme.color1 : theme.color4
-        }
-    }
-
-    Connections {
-        target: recorder
-        function onHoveredChanged() { updateBorderColor() }
-        function onRecordingChanged() { updateBorderColor() }
     }
 }

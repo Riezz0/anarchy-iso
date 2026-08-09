@@ -33,9 +33,10 @@ Item {
     property bool hasUnread:    false
     property bool dndEnabled:   false
     property var  activeNotifications: []
+    property bool startupGrace: true
 
     readonly property string cacheDir:
-        StandardPaths.writableLocation(StandardPaths.CacheLocation).replace(/^file:\/\//, "")
+        StandardPaths.writableLocation(StandardPaths.CacheLocation).toString().replace(/^file:\/\//, "")
     readonly property string persistPath:
         cacheDir + "/notifications.json"
 
@@ -76,14 +77,16 @@ Item {
             notifsRoot.hasUnread = true
             notifsRoot.persist()
 
-            notifsRoot.notificationReceived(
-                notifData.appName,
-                notifData.summary,
-                notifData.body,
-                notifData.urgency,
-                notifData.timeout,
-                []
-            )
+            if (!notifsRoot.startupGrace) {
+                notifsRoot.notificationReceived(
+                    notifData.appName,
+                    notifData.summary,
+                    notifData.body,
+                    notifData.urgency,
+                    notifData.timeout,
+                    []
+                )
+            }
         }
     }
 
@@ -143,6 +146,13 @@ Item {
         running:  true
         repeat:   true
         onTriggered: notifsRoot.cleanup()
+    }
+
+    Timer {
+        interval: 2000
+        running:  true
+        repeat:   false
+        onTriggered: notifsRoot.startupGrace = false
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

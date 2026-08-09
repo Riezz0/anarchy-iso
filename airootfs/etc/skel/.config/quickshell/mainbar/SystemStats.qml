@@ -125,7 +125,7 @@ Item {
     Process {
         id:      diskProc
         command: ["bash", "-c",
-            "lsblk -b -d -n -o NAME,SIZE 2>/dev/null | grep -E '^(sd|nvme)' | while read dname dsize; do " +
+            "lsblk -b -d -n -o NAME,SIZE 2>/dev/null | grep -E '^(sd|nvme|vd|xvd)' | while read dname dsize; do " +
             "mp=$(findmnt -n -r -o TARGET /dev/${dname}p2 2>/dev/null | head -1); " +
             "[ -z \"$mp\" ] && mp=$(findmnt -n -r -o TARGET /dev/${dname}1 2>/dev/null | head -1); " +
             "[ -z \"$mp\" ] && mp=$(findmnt -n -r -o TARGET /dev/${dname} 2>/dev/null | head -1); " +
