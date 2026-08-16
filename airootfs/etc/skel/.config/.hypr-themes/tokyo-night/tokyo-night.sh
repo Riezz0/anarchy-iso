@@ -34,14 +34,15 @@ KVANTUM_DIR="$USER_HOME/.config/Kvantum/pywal"
 awww img "$WALL" --transition-fps 144 --transition-step 255 --transition-type random
 cp -r "$WALL" "/home/$USER/.config/hypr/lock.png"
 cp -r "$WALL" "/home/$USER/.config/activebg/Wall.png"
-cp "$WALL" "/var/local/sddm-wallpaper/background.jpg"
+cp "$WALL" "/var/local/sddm-wallpaper/background.jpg" 2>/dev/null || true
 
 #------------------------#
 # SET COLOR SCHEME
 #------------------------#
 cp -r "$THEME_DIR/pywal" "$PYWAL"
 wal --theme "$PYWAL"  # synchronous to ensure cache files exist
-cp ~/.cache/wal/colors.qml /var/local/sddm-wallpaper/PywalColors.qml
+cat "$HOME/.cache/wal/colors.json" > "$HOME/.cache/wal/theme-colors.json"
+cp ~/.cache/wal/colors.qml /var/local/sddm-wallpaper/PywalColors.qml 2>/dev/null || true
 
 #------------------------#
 # MAKE DIRECTORIES
@@ -53,6 +54,7 @@ mkdir -p /home/$USER/.config/vesktop/themes/
 #------------------------#
 cp -r "$THEME_DIR/hypr-colors" "$USER_HOME/.config/hypr/modules/colors.lua"
 cp -r "$THEME_DIR/hyprlook" "$USER_HOME/.config/hypr/modules/look.lua"
+bash ~/.config/.hypr-themes/patch-look.sh
 cp -r "$THEME_DIR/kitty" "$USER_HOME/.config/kitty/kitty.conf"
 cp -r "$THEME_DIR/qcol" "$USER_HOME/.config/quickshell/mainbar/Theme.qml"
 cp -r "$THEME_DIR/rofi" "$USER_HOME/.config/rofi/launcher/colors.rasi"
@@ -99,28 +101,29 @@ rm -rf ~/.cache/fastfetch
 cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/fastfetch/arch.png"
 
 #------------------------#
-# WAYBAR ICON
+# BAR ICON
 #------------------------#
-cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/waybar/icons/arch.png"
+# cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/waybar/icons/arch.png"
 cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/quickshell/assets/arch.png"
 
 #------------------------#
 # WAYBAR LOGO 
 #------------------------#
-cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/waybar/icons/arch.png"
+# cp -r "$THEME_DIR/arch-tokyo-night.png" "/home/$USER/.config/waybar/icons/arch.png"
 
 #------------------------#
 # REFRESH INTERFACES
 #------------------------#
 hyprctl setcursor "$CURSOR_THEME" 30
-hyprctl reload
+bash ~/.config/.hypr-themes/set-cursor-theme.sh "$CURSOR_THEME"
+# Quickshell applies the Pywal colors without reloading the compositor.
 kill -SIGUSR1 $(pidof kitty)
 pywalfox update & disown 
 #swaync-client -rs
 #killall waybar
 #bash /home/$USER/.config/scripts/waybar.sh
-killall quickshell
-bash /usr/local/bin/qbarmain.sh
+# REMOVED: killall quickshell
+# REMOVED: bash /usr/local/bin/qbarmain.sh
 wait
 
 #------------------------#
@@ -134,8 +137,16 @@ cp "$THEME_DIR/$THEME_NAME.sh" "/home/$USER/.local/share/themes/hypr-theme-activ
 notify-send -a "$THEME_DISPLAY" "Theme Loaded"
 
 #------------------------#
-# NAUTILUS
+# REFRESH GTK APPS
 #------------------------#
-nautilus -q && gtk4-update-icon-cache ~/.config/gtk-4.0
-systemctl --user restart xdg-desktop-portal-gtk xdg-desktop-portal
-
+gtk4-update-icon-cache "$HOME/.config/gtk-4.0" 2>/dev/null || true
+gtk-update-icon-cache "$HOME/.config/gtk-3.0" 2>/dev/null || true
+killall -q nautilus 2>/dev/null || true
+killall -q nemo 2>/dev/null || true
+killall -q thunar 2>/dev/null || true
+killall -q gnome-text-editor 2>/dev/null || true
+killall -q gnome-calculator 2>/dev/null || true
+killall -q gnome-calendar 2>/dev/null || true
+killall -q evince 2>/dev/null || true
+killall -q eog 2>/dev/null || true
+killall -q file-roller 2>/dev/null || true

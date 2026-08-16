@@ -10,7 +10,7 @@ if [ -z "$THEME_SCRIPT" ] || [ ! -f "$THEME_SCRIPT" ]; then
     exit 1
 fi
 
-# Run theme script as-is — it handles killall + qbarmain itself
+# Run theme script — it handles hyprlook copy, patching, killall, and restart
 bash "$THEME_SCRIPT" >> "$LOG" 2>&1
 
 echo "[$(date)] Script finished" >> "$LOG"
