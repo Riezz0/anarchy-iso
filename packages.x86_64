@@ -219,7 +219,6 @@ python-pywal16
 python-pywalfox
 python-yaml
 python-yapsy-git
-pyprland
 qt5-wayland
 qt5-xmlpatterns
 qt5ct
@@ -239,7 +238,6 @@ qt6-svg
 qt6-wayland
 qt6ct
 quickshell
-refind
 rofi
 rust
 sddm
