@@ -1,4 +1,3 @@
-# Standard Arch ISO (releng) packages
 alsa-utils
 amd-ucode
 arch-install-scripts
@@ -44,6 +43,7 @@ iw
 iwd
 jfsutils
 kitty-terminfo
+kmscon-terminfo
 ldns
 less
 lftp
@@ -74,6 +74,7 @@ ndisc6
 nfs-utils
 nilfs-utils
 nmap
+ntfsprogs
 nvme-cli
 open-iscsi
 open-vm-tools
@@ -209,6 +210,7 @@ polkit
 polkit-qt5
 pulsemixer
 python
+python-pip
 python-anyascii
 python-cssutils
 python-gobject
@@ -217,6 +219,7 @@ python-libsass
 python-material-color-utilities
 python-pywal16
 python-pywalfox
+python-virtualenv
 python-yaml
 python-yapsy-git
 qt5-wayland
