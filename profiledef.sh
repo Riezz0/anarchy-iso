@@ -28,11 +28,11 @@ file_permissions=(
   ["/usr/local/bin/awww.sh"]="0:0:755"
   ["/usr/local/bin/anarchy-start.sh"]="0:0:755"
   ["/usr/local/bin/anarchy-installer.sh"]="0:0:755"
-  ["/usr/local/bin/qbarmain.sh"]="0:0:755"
+  ["/usr/local/bin/anarchy-installer-off.sh"]="0:0:755"
+  ["/usr/local/bin/anarchy-bar.sh"]="0:0:755"
   ["/usr/local/bin/welcome.sh"]="0:0:755"
   ["/etc/skel/.config/rofi/launcher/launcher.sh"]="0:0:755"
   ["/etc/skel/.config/.hypr-themes/tokyo-night/tokyo-night.sh"]="0:0:755"
   ["/etc/skel/.local/share/themes/hypr-theme-active.sh"]="0:0:755"
-  ["/etc/skel/.config/quickshell/scripts/wf-recorder.sh"]="0:0:755"
   ["/var/local/sddm-wallpaper"]="1000:sddm:775"
 )

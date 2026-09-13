@@ -27,13 +27,12 @@ Scope {
             const data = JSON.parse(colorFile.text())
             background = data.special.background
             foreground = data.special.foreground
-            accent = data.colors.color4
-            red = data.colors.color1
-            green = data.colors.color2
-            yellow = data.colors.color3
-            blue = data.colors.color4
-            magenta = data.colors.color5
-            cyan = data.colors.color6
+            color1 = data.colors.color1
+            color2 = data.colors.color2
+            color3 = data.colors.color3
+            color4 = data.colors.color4
+            color5 = data.colors.color5
+            color6 = data.colors.color6
             muted = data.colors.color8
         } catch (e) {
             console.warn("powerbar: failed to parse pywal colors:", e)

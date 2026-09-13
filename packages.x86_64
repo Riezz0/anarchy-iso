@@ -8,7 +8,6 @@ bcachefs-tools
 bind
 bolt
 brltty
-broadcom-wl
 btrfs-progs
 clonezilla
 cloud-init
@@ -143,6 +142,7 @@ chromium
 cmatrix
 coolercontrol
 coolercontrold
+ddcutil
 dkms
 e2fsprogs
 eza
@@ -257,7 +257,6 @@ ttf-font-awesome-5
 ttf-jetbrains-mono-nerd
 ttf-liberation
 uwsm
-vencord-bin
 vesktop-bin
 vkbasalt
 vlc
@@ -282,5 +281,5 @@ zsh-autosuggestions
 zsh-autoswitch-virtualenv-git
 zsh-fast-syntax-highlighting
 zsh-syntax-highlighting
-#python-hijri-converter
+wget
 #vscodium-bin

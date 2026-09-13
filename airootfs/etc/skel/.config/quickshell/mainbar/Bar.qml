@@ -51,7 +51,10 @@ Variants {
             anchors.fill: parent
             color:        "transparent"
             radius: barSettings.barRadius
-            visible:      barSettings.loaded
+            opacity:      barSettings.loaded ? 1 : 0
+            visible:      true
+
+            Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
 
             Rectangle {
                 id:           barFill

@@ -109,13 +109,13 @@ Item {
                     settingsRoot.hyprlandBlurVibrancy = data.hyprlandBlurVibrancy
                 }
                 _loading = false
-                applyHyprlandRadius(settingsRoot.hyprlandRadius)
-                applyHyprlandBorderThickness(settingsRoot.hyprlandBorderThickness)
-                applyHyprlandWindowOpacity(settingsRoot.hyprlandWindowOpacity)
-                applyHyprlandGapIn(settingsRoot.hyprlandGapIn)
-                applyHyprlandGapOut(settingsRoot.hyprlandGapOut)
+                applyHyprlandRadius(settingsRoot.hyprlandRadius, false)
+                applyHyprlandBorderThickness(settingsRoot.hyprlandBorderThickness, false)
+                applyHyprlandWindowOpacity(settingsRoot.hyprlandWindowOpacity, false)
+                applyHyprlandGapIn(settingsRoot.hyprlandGapIn, false)
+                applyHyprlandGapOut(settingsRoot.hyprlandGapOut, false)
                 applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, settingsRoot.hyprlandBlurSize,
-                                  settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy)
+                                  settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy, false)
                 settingsRoot.loaded = true
                 if (settingsRoot.nightlightEnabled) {
                     nightlightToggleProc.command = ["nohup", "setsid", "bash", "-c",
@@ -234,42 +234,42 @@ Item {
 
     function setHyprlandRadius(r) {
         settingsRoot.hyprlandRadius = r
-        applyHyprlandRadius(r)
+        applyHyprlandRadius(r, true)
     }
 
     function setHyprlandWindowOpacity(o) {
         settingsRoot.hyprlandWindowOpacity = o
-        applyHyprlandWindowOpacity(o)
+        applyHyprlandWindowOpacity(o, true)
     }
 
     function setHyprlandGapIn(g) {
         settingsRoot.hyprlandGapIn = g
-        applyHyprlandGapIn(g)
+        applyHyprlandGapIn(g, true)
     }
 
     function setHyprlandGapOut(g) {
         settingsRoot.hyprlandGapOut = g
-        applyHyprlandGapOut(g)
+        applyHyprlandGapOut(g, true)
     }
 
     function setHyprlandBlurEnabled(enabled) {
         settingsRoot.hyprlandBlurEnabled = enabled
-        applyHyprlandBlur(enabled, settingsRoot.hyprlandBlurSize, settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy)
+        applyHyprlandBlur(enabled, settingsRoot.hyprlandBlurSize, settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy, true)
     }
 
     function setHyprlandBlurSize(s) {
         settingsRoot.hyprlandBlurSize = s
-        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, s, settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy)
+        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, s, settingsRoot.hyprlandBlurPasses, settingsRoot.hyprlandBlurVibrancy, true)
     }
 
     function setHyprlandBlurPasses(p) {
         settingsRoot.hyprlandBlurPasses = p
-        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, settingsRoot.hyprlandBlurSize, p, settingsRoot.hyprlandBlurVibrancy)
+        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, settingsRoot.hyprlandBlurSize, p, settingsRoot.hyprlandBlurVibrancy, true)
     }
 
     function setHyprlandBlurVibrancy(v) {
         settingsRoot.hyprlandBlurVibrancy = v
-        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, settingsRoot.hyprlandBlurSize, settingsRoot.hyprlandBlurPasses, v)
+        applyHyprlandBlur(settingsRoot.hyprlandBlurEnabled, settingsRoot.hyprlandBlurSize, settingsRoot.hyprlandBlurPasses, v, true)
     }
 
     function setBarOpacity(o) {
@@ -282,7 +282,7 @@ Item {
 
     function setHyprlandBorderThickness(t) {
         settingsRoot.hyprlandBorderThickness = t
-        applyHyprlandBorderThickness(t)
+        applyHyprlandBorderThickness(t, true)
     }
 
     function setBarMonitor(m) {
@@ -309,51 +309,55 @@ Item {
         settingsRoot.workspaceStyle = style
     }
 
-    function applyHyprlandRadius(r) {
+    function applyHyprlandRadius(r, patchThemes) {
         hyprctlProc.command = ["hyprctl", "eval", "hl.config({ decoration = { rounding = " + r + " } })"]
         hyprctlProc.running = true
         saveLuaConfig(r)
-        patchAllThemeHyprlook("rounding", r)
+        if (patchThemes) patchAllThemeHyprlook("rounding", r)
     }
 
-    function applyHyprlandBorderThickness(t) {
+    function applyHyprlandBorderThickness(t, patchThemes) {
         hyprctlBorderProc.command = ["hyprctl", "eval", "hl.config({ general = { border_size = " + t + " } })"]
         hyprctlBorderProc.running = true
         saveLuaBorderConfig(t)
-        patchAllThemeHyprlook("border_size", t)
+        if (patchThemes) patchAllThemeHyprlook("border_size", t)
     }
 
-    function applyHyprlandWindowOpacity(o) {
+    function applyHyprlandWindowOpacity(o, patchThemes) {
         hyprctlOpacityProc.command = ["hyprctl", "eval", "hl.config({ decoration = { active_opacity = " + o + ", inactive_opacity = " + o + " } })"]
         hyprctlOpacityProc.running = true
         saveLuaOpacityConfig(o)
-        patchAllThemeHyprlook("active_opacity", o)
-        patchAllThemeHyprlook("inactive_opacity", o)
+        if (patchThemes) {
+            patchAllThemeHyprlook("active_opacity", o)
+            patchAllThemeHyprlook("inactive_opacity", o)
+        }
     }
 
-    function applyHyprlandGapIn(g) {
+    function applyHyprlandGapIn(g, patchThemes) {
         hyprctlGapInProc.command = ["hyprctl", "eval", "hl.config({ general = { gaps_in = " + g + " } })"]
         hyprctlGapInProc.running = true
         saveLuaGapInConfig(g)
-        patchAllThemeHyprlook("gaps_in", g)
+        if (patchThemes) patchAllThemeHyprlook("gaps_in", g)
     }
 
-    function applyHyprlandGapOut(g) {
+    function applyHyprlandGapOut(g, patchThemes) {
         hyprctlGapOutProc.command = ["hyprctl", "eval", "hl.config({ general = { gaps_out = " + g + " } })"]
         hyprctlGapOutProc.running = true
         saveLuaGapOutConfig(g)
-        patchAllThemeHyprlook("gaps_out", g)
+        if (patchThemes) patchAllThemeHyprlook("gaps_out", g)
     }
 
-    function applyHyprlandBlur(enabled, size, passes, vibrancy) {
+    function applyHyprlandBlur(enabled, size, passes, vibrancy, patchThemes) {
         var en = enabled ? "true" : "false"
         hyprctlBlurProc.command = ["hyprctl", "eval", "hl.config({ decoration = { blur = { enabled = " + en + ", size = " + size + ", passes = " + passes + ", vibrancy = " + vibrancy + " } } })"]
         hyprctlBlurProc.running = true
         saveLuaBlurConfig(enabled, size, passes, vibrancy)
-        patchAllThemeHyprlookBool("enabled", en)
-        patchAllThemeHyprlook("size", size)
-        patchAllThemeHyprlook("passes", passes)
-        patchAllThemeHyprlookFloat("vibrancy", vibrancy)
+        if (patchThemes) {
+            patchAllThemeHyprlookBool("enabled", en)
+            patchAllThemeHyprlook("size", size)
+            patchAllThemeHyprlook("passes", passes)
+            patchAllThemeHyprlookFloat("vibrancy", vibrancy)
+        }
     }
 
     function saveLuaOpacityConfig(o) {
@@ -412,12 +416,12 @@ Item {
 
     function patchAllThemeHyprlook(key, value) {
         var cmd = "for f in $HOME/.config/.hypr-themes/*/hyprlook; do " +
-                  "[ -f \"$f\" ] && sed -i 's/ " + key + "\\s*=\\s*[0-9.]*\\+/" + key + " = " + value + "/g' \"$f\"; done"
+                  "[ -f \"$f\" ] && sed -i 's/\\b" + key + "\\s*=\\s*[0-9.]*\\+/" + key + " = " + value + "/g' \"$f\"; done"
         themePatchProc.command = ["sh", "-c", cmd]
         themePatchProc.running = true
         if (key === "rounding") {
             var cmd2 = "for f in $HOME/.config/.hypr-themes/*/hyprlook; do " +
-                       "[ -f \"$f\" ] && sed -i 's/ rounding_power\\s*=\\s*[0-9.]*\\+/rounding_power = " + value + "/g' \"$f\"; done"
+                       "[ -f \"$f\" ] && sed -i 's/\\brounding_power\\s*=\\s*[0-9.]*\\+/rounding_power = " + value + "/g' \"$f\"; done"
             themePatchProc2.command = ["sh", "-c", cmd2]
             themePatchProc2.running = true
         }
@@ -425,14 +429,14 @@ Item {
 
     function patchAllThemeHyprlookBool(key, value) {
         var cmd = "for f in $HOME/.config/.hypr-themes/*/hyprlook; do " +
-                  "[ -f \"$f\" ] && sed -i 's/ " + key + "\\s*=\\s*true\\| " + key + "\\s*=\\s*false/" + key + "   = " + value + "/g' \"$f\"; done"
+                  "[ -f \"$f\" ] && sed -i 's/\\b" + key + "\\s*=\\s*true\\|\\b" + key + "\\s*=\\s*false/" + key + "   = " + value + "/g' \"$f\"; done"
         themePatchProc.command = ["sh", "-c", cmd]
         themePatchProc.running = true
     }
 
     function patchAllThemeHyprlookFloat(key, value) {
         var cmd = "for f in $HOME/.config/.hypr-themes/*/hyprlook; do " +
-                  "[ -f \"$f\" ] && sed -i 's/ " + key + "\\s*=\\s*[0-9]*\\.[0-9]*/" + key + "  = " + value + "/g' \"$f\"; done"
+                  "[ -f \"$f\" ] && sed -i 's/\\b" + key + "\\s*=\\s*[0-9]*\\.[0-9]*/" + key + "  = " + value + "/g' \"$f\"; done"
         themePatchProc2.command = ["sh", "-c", cmd]
         themePatchProc2.running = true
     }
