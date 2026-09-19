@@ -5,69 +5,60 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 WORK_DIR="${SCRIPT_DIR}/work"
 OUT_DIR="${SCRIPT_DIR}/out"
 LOCAL_REPO="${SCRIPT_DIR}/airootfs/var/local/anarchy-repo"
+SOURCE_REPO="${ANARCHY_REPO_DIR:-/home/${USER}/git/anarchy-repo}/x86_64"
 
-REQUIRED_PACKAGES=(
-    adw-gtk-theme-git anarchy-installer anarchy-welcome arch-update awww
-    blueman broadcom-wl-dkms bluez bluez-utils coolercontrol coolercontrold
-    eza goverlay-git gradience-git grim-git hypridle hyprlock hyprmon-bin
-    hyprpicker hyprscratch inter-font kitty kvantum-qt6-git mesa-utils
-    nautilus nautilus-admin-gtk4 nautilus-open-any-terminal-git neovim
-    nwg-displays nwg-look oh-my-zsh-git otf-font-awesome-5 plymouth
-    pyprland python-anyascii python-cssutils python-gobject python-libsass
-    python-material-color-utilities python-pywal16 python-pywalfox
-    python-yapsy-git qt5-graphicaleffects qt5-imageformats qt5-multimedia
-    qt5-quickcontrols qt5-quickcontrols2 qt5-styleplugins qt5-svg
-    qt6-5compat qt6-base qt6-declarative qt6-imageformats qt6-multimedia
-    qt6-svg rofi slurp-git swaync ttf-font-awesome-4 ttf-font-awesome-5
-    ttf-jetbrains-mono-nerd vencord-bin vesktop-bin vkbasalt vlc
-    vlc-plugins-all wf-recorder-git wlsunset xdg-terminal-exec xfce-polkit
-    zsh-autocomplete zsh-autosuggestions zsh-autoswitch-virtualenv-git
-    zsh-fast-syntax-highlighting zsh-syntax-highlighting
-)
-
-echo "==> Setting up local anarchy-repo for offline install..."
+echo "==> Checking local anarchy-repo for offline install..."
 mkdir -p "$LOCAL_REPO"
-
-MISSING=()
-for pkg in "${REQUIRED_PACKAGES[@]}"; do
-    if ! ls "$LOCAL_REPO"/${pkg}-*.pkg.tar.zst &>/dev/null; then
-        MISSING+=("$pkg")
-    fi
-done
-
-if [ ${#MISSING[@]} -eq 0 ]; then
-    echo "  All ${#REQUIRED_PACKAGES[@]} packages present in $LOCAL_REPO"
-else
-    echo "  Missing ${#MISSING[@]} packages: ${MISSING[*]}"
-    echo "  Cloning anarchy-repo to fetch missing packages..."
-    git clone --depth 1 https://github.com/Riezz0/anarchy-repo.git /tmp/anarchy-repo-clone
-    for pkg in "${MISSING[@]}"; do
-        pkg_file=$(ls /tmp/anarchy-repo-clone/x86_64/${pkg}-*.pkg.tar.zst 2>/dev/null | head -1)
-        if [ -n "$pkg_file" ]; then
-            echo "    Copying $(basename "$pkg_file")"
-            cp "$pkg_file" "$LOCAL_REPO/"
-        else
-            echo "    WARNING: ${pkg} not found in anarchy-repo, skipping..."
-        fi
-    done
-    rm -rf /tmp/anarchy-repo-clone
+shopt -s nullglob
+PACKAGE_FILES=("$LOCAL_REPO"/*.pkg.tar.zst)
+SOURCE_PACKAGE_FILES=("$SOURCE_REPO"/*.pkg.tar.zst)
+if [ ${#SOURCE_PACKAGE_FILES[@]} -gt 0 ]; then
+    echo "  Refreshing ISO package cache from $SOURCE_REPO"
+    rm -f "$LOCAL_REPO"/*.pkg.tar.zst
+    cp "${SOURCE_PACKAGE_FILES[@]}" "$LOCAL_REPO/"
+    PACKAGE_FILES=("$LOCAL_REPO"/*.pkg.tar.zst)
+elif [ ${#PACKAGE_FILES[@]} -eq 0 ]; then
+    echo "  Local repository is empty; downloading package archives..."
+    CLONE_DIR=$(mktemp -d /tmp/anarchy-repo.XXXXXX)
+    cleanup_clone() { rm -rf "$CLONE_DIR"; }
+    trap cleanup_clone EXIT
+    git clone --depth 1 https://github.com/Riezz0/anarchy-repo.git "$CLONE_DIR"
+    cp "$CLONE_DIR"/x86_64/*.pkg.tar.zst "$LOCAL_REPO/"
+    cleanup_clone
+    trap - EXIT
+    PACKAGE_FILES=("$LOCAL_REPO"/*.pkg.tar.zst)
 fi
+if [ ${#PACKAGE_FILES[@]} -eq 0 ]; then
+    echo "ERROR: No package archives found in $LOCAL_REPO" >&2
+    exit 1
+fi
+echo "  Found ${#PACKAGE_FILES[@]} local package archives"
 
 echo "  Building repo database..."
 cd "$LOCAL_REPO"
-repo-add anarchy-repo.db.tar.zst *.pkg.tar.zst
+rm -f anarchy-repo.db anarchy-repo.files anarchy-repo.db.tar.zst anarchy-repo.files.tar.zst
+repo-add anarchy-repo.db.tar.zst "${PACKAGE_FILES[@]}"
 mv anarchy-repo.db.tar.zst anarchy-repo.db
 mv anarchy-repo.files.tar.zst anarchy-repo.files 2>/dev/null || true
 cd "$SCRIPT_DIR"
 
 echo "==> Cleaning previous build artifacts..."
 sudo rm -rf "${WORK_DIR}"
+sudo rm -f "${OUT_DIR}"/*.iso "${OUT_DIR}"/*.sha512
+echo "==> Removing stale anarchy-installer package caches..."
+sudo rm -f /var/cache/pacman/pkg/anarchy-installer-*.pkg.tar.*
+rm -f "${SCRIPT_DIR}"/airootfs/var/cache/pacman/pkg/anarchy-installer-*.pkg.tar.*
+INSTALLER_PACKAGES=("$LOCAL_REPO"/anarchy-installer-*.pkg.tar.zst)
+if [ ${#INSTALLER_PACKAGES[@]} -eq 0 ]; then
+    echo "ERROR: Refreshed anarchy-installer package was not found." >&2
+    exit 1
+fi
+sudo cp "${INSTALLER_PACKAGES[@]}" /var/cache/pacman/pkg/
 
 echo "==> Building ISO..."
 sudo mkarchiso -v -w "${WORK_DIR}" -o "${OUT_DIR}" "${SCRIPT_DIR}"
 
 echo "==> Cleaning up..."
 sudo rm -rf "${WORK_DIR}"
-sudo rm -rf "$LOCAL_REPO"
 
 echo "==> Build complete. Output in ${OUT_DIR}/"
