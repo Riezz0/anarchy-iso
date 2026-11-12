@@ -1,10 +1,10 @@
 -- Input settings
 hl.config({
     input = {
-        kb_layout  = "us,ar,warsh",
+        kb_layout  = "",
         kb_variant = "",
         kb_model   = "",
-        kb_options = "grp:alt_shift_toggle",
+        kb_options = "",
         kb_rules   = "",
 
         follow_mouse = 1,
