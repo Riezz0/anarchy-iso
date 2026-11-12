@@ -126,6 +126,7 @@ xfsprogs
 xl2tpd
 zsh
 
+gcc
 anarchy-installer
 hyprland
 sddm
@@ -154,7 +155,7 @@ zsh-fast-syntax-highlighting
 zsh-syntax-highlighting
 python-virtualenv
 oh-my-zsh-git
-cairo
+python-cairo
 ttf-jetbrains-mono-nerd
 otf-font-awesome
 ttf-font-awesome-4
@@ -169,7 +170,7 @@ hyprsunset
 eza
 qt5-graphicaleffects
 qt5-imageformats
-qt5-multimedia 
+qt5-multimedia
 qt5-quickcontrols2
 qt5-quickcontrols
 qt5-svg

@@ -94,8 +94,9 @@ copy_system_themes() {
     local sddm_theme_dir="$SCRIPT_DIR/airootfs/usr/share/sddm/themes"
     local etc_default_dir="$SCRIPT_DIR/airootfs/etc/default"
     local sddm_wallpaper_dir="$SCRIPT_DIR/airootfs/var/local/sddm-wallpaper"
+    local cursors_dir="$SCRIPT_DIR/airootfs/etc/skel/.local/share/icons"
 
-    mkdir -p -- "$grub_theme_dir" "$sddm_theme_dir" "$etc_default_dir" "$sddm_wallpaper_dir"
+    mkdir -p -- "$grub_theme_dir" "$sddm_theme_dir" "$etc_default_dir" "$sddm_wallpaper_dir" "$cursors_dir"
 
     copy_file "$ANARCHYDOTS/sys/grub/grub" "$etc_default_dir/grub" 644
     copy_dir "$ANARCHYDOTS/sys/grub/tokyo-night" "$grub_theme_dir/tokyo-night"
@@ -133,6 +134,8 @@ copy_dir "$ANARCHYDOTS/omz/.oh-my-zsh" "$SKEL_DIR/.oh-my-zsh"
 copy_dir "$ANARCHYDOTS/themes/.themes" "$SKEL_DIR/.themes"
 copy_dir "$ANARCHYDOTS/icons/.icons" "$SKEL_DIR/.icons"
 copy_dir "$ANARCHYDOTS/hypr-themes/.config/.hypr-themes/tokyo-night/" "$SKEL_DIR/.config/.hypr-themes/tokyo-night"
+copy_dir "$ANARCHYDOTS/cursors/.local/share/icons/bibata_tokyo_night_modern" \
+    "$SKEL_DIR/.local/share/icons/bibata_tokyo_night_modern"
 copy_file "$ANARCHYDOTS/hypr-themes/.config/.hypr-themes/get-themes.sh" \
     "$SKEL_DIR/.config/.hypr-themes/get-themes.sh" 755
 copy_file "$ANARCHYDOTS/hypr-themes/.config/.hypr-themes/patch-look.sh" \

@@ -267,7 +267,7 @@ if (( ${#missing_third_party[@]} > 0 )); then
     sudo pacman --config "$BUILD_CONF" -S --needed --noconfirm \
         base-devel git cmake meson ninja autoconf-archive go rust python \
         python-wheel python-hatchling python-build python-installer \
-        python-setuptools python-markdown-it-py \
+        python-setuptools python-markdown-it-py python-cairo \
         vulkan-headers spirv-tools cli11 wayland-protocols >/dev/null || {
             echo "Warning: could not install build tools; makepkg may fail." >&2
         }
