@@ -19,6 +19,7 @@ file_permissions=(
   ["/root"]="0:0:750"
   ["/root/.automated_script.sh"]="0:0:755"
   ["/etc/skel/.config/rofi/launcher/launcher.sh"]="0:0:755"
+  ["/etc/skel/.local/share/themes/hypr-theme-active.sh"]="0:0:755"
   ["/usr/local/bin/Anarchy-Launcher"]="0:0:755"
   ["/usr/local/bin/Anarchy-Installer-Offline-GUI"]="0:0:755"
   ["/usr/local/bin/awww.sh"]="0:0:755"
