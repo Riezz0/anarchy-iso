@@ -1,0 +1,82 @@
+@define-color accent_color {color4};
+@define-color accent_bg_color {color4};
+@define-color accent_fg_color {background};
+@define-color window_bg_color {background};
+@define-color window_fg_color {foreground};
+@define-color view_bg_color {background};
+@define-color view_fg_color {foreground};
+@define-color headerbar_bg_color {color0};
+@define-color headerbar_fg_color {foreground};
+@define-color popover_bg_color {color0};
+@define-color popover_fg_color {foreground};
+@define-color dialog_bg_color {background};
+@define-color dialog_fg_color {foreground};
+@define-color card_bg_color alpha({foreground}, 0.07);
+@define-color card_fg_color {foreground};
+@define-color sidebar_bg_color {color0};
+@define-color sidebar_fg_color {foreground};
+@define-color sidebar_backdrop_color {color0};
+@define-color sidebar_border_color {color8};
+@define-color theme_bg_color {background};
+@define-color theme_fg_color {foreground};
+@define-color theme_base_color {background};
+@define-color theme_text_color {foreground};
+@define-color theme_selected_bg_color {color4};
+@define-color theme_selected_fg_color {background};
+
+/* Flat uncolored toolbar & headerbar buttons */
+toolbar button,
+toolbar toolbutton > button,
+toolbar menubutton > button,
+.toolbar button,
+.toolbar toolbutton > button,
+.toolbar menubutton > button,
+headerbar button {
+  background: transparent;
+  background-image: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+toolbar button:hover,
+toolbar toolbutton > button:hover,
+toolbar menubutton > button:hover,
+.toolbar button:hover,
+.toolbar toolbutton > button:hover,
+.toolbar menubutton > button:hover,
+headerbar button:hover {
+  background: alpha({foreground}, 0.12);
+}
+
+/* Clean GTK3 file picker sidebar without pill boxes */
+filechooser placessidebar row.sidebar-row,
+placessidebar list row.sidebar-row,
+placessidebar row.sidebar-row,
+placessidebar row {
+  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+}
+
+filechooser placessidebar row.sidebar-row:hover,
+placessidebar list row.sidebar-row:hover,
+placessidebar row.sidebar-row:hover {
+  background: alpha({foreground}, 0.08);
+}
+
+filechooser placessidebar row.sidebar-row:selected,
+placessidebar list row.sidebar-row:selected,
+placessidebar row.sidebar-row:selected {
+  background: {color4};
+  background-color: {color4};
+  color: {background};
+}
+
+filechooser placessidebar row.sidebar-row:selected label,
+filechooser placessidebar row.sidebar-row:selected image,
+placessidebar list row.sidebar-row:selected label,
+placessidebar list row.sidebar-row:selected image {
+  color: {background};
+}

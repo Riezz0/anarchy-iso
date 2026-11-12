@@ -1,0 +1,141 @@
+:root {
+  --accent-color: {color4};
+  --accent-bg-color: {color4};
+  --accent-fg-color: {background};
+  --window-bg-color: {background};
+  --window-fg-color: {foreground};
+  --view-bg-color: {background};
+  --view-fg-color: {foreground};
+  --success-color: {color10};
+  --success-bg-color: {color2};
+  --success-fg-color: {foreground};
+  --warning-color: {color11};
+  --warning-bg-color: {color3};
+  --warning-fg-color: {background};
+  --destructive-color: {color9};
+  --destructive-bg-color: {color1};
+  --destructive-fg-color: {foreground};
+  --error-color: {color9};
+  --error-bg-color: {color1};
+  --error-fg-color: {foreground};
+  --headerbar-bg-color: {color0};
+  --headerbar-fg-color: {foreground};
+  --popover-bg-color: {color0};
+  --popover-fg-color: {foreground};
+  --dialog-bg-color: {background};
+  --dialog-fg-color: {foreground};
+  --card-bg-color: {color8};
+  --card-fg-color: {foreground};
+  --sidebar-bg-color: {color0};
+  --sidebar-fg-color: {foreground};
+  --sidebar-backdrop-color: {color0};
+  --sidebar-border-color: {color8};
+  --secondary-sidebar-bg-color: var(--sidebar-bg-color);
+  --secondary-sidebar-fg-color: var(--sidebar-fg-color);
+  --secondary-sidebar-backdrop-color: var(--sidebar-backdrop-color);
+  --secondary-sidebar-border-color: var(--sidebar-border-color);
+  --blue-1: {color12};
+  --blue-2: {color4};
+  --green-1: {color10};
+  --yellow-1: {color11};
+  --red-1: {color9};
+  --purple-1: {color13};
+  --purple-2: {color5};
+  --orange-1: {color11};
+  --brown-1: {color3};
+  --light-1: {foreground};
+  --light-5: {color7};
+  --dark-1: {color8};
+}
+
+toast {
+  background-color: {color3};
+  color: {background};
+}
+
+toggle:checked {
+  background-color: {color4};
+  color: {background};
+}
+
+/* 1 & 2. Active sidebar item & selected file/list rows (color4) */
+.navigation-sidebar > row:selected,
+listview > row:selected,
+list > row:selected,
+.view:selected {
+  background-color: {color4};
+  color: {background};
+}
+
+.navigation-sidebar > row:selected label,
+.navigation-sidebar > row:selected image,
+listview > row:selected label,
+list > row:selected label {
+  color: {background};
+}
+
+/* 3. Right-click context menus & dropdown popovers (color5) */
+popover.menu modelbutton:hover,
+popover.menu modelbutton:selected,
+popover modelbutton:hover,
+popover modelbutton:selected,
+menu menuitem:hover,
+.menu menuitem:hover,
+.context-menu menuitem:hover {
+  background-color: {color5};
+  color: {background};
+}
+
+popover.menu modelbutton:hover label,
+popover.menu modelbutton:selected label,
+popover modelbutton:hover label,
+popover modelbutton:selected label,
+menu menuitem:hover label,
+.menu menuitem:hover label,
+.context-menu menuitem:hover label {
+  color: {background};
+}
+
+/* 4. Floating bottom selection pill in Nautilus (color3) */
+.floating-bar {
+  background-color: {color3};
+  color: {background};
+  border-radius: 12px;
+  padding: 4px 10px;
+}
+
+.floating-bar label {
+  color: {background};
+}
+
+/* 5. Active tab in Libadwaita tab bar (color2) */
+tabbar tab:selected,
+tabbox tab:selected {
+  background-color: {color2};
+  color: {background};
+}
+
+tabbar tab:selected label,
+tabbar tab:selected image,
+tabbox tab:selected label,
+tabbox tab:selected image {
+  color: {background};
+}
+
+/* 6. Clean circular window close button */
+windowcontrols button.close {
+  background: none;
+  box-shadow: none;
+}
+
+windowcontrols button.close image {
+  background-color: {color5};
+  color: {background};
+  border-radius: 999px;
+  padding: 4px;
+}
+
+windowcontrols button.close:hover image {
+  background-color: {color1};
+  color: {background};
+}

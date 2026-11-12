@@ -1,3 +1,5 @@
-work/
-out/
-airootfs/var/local/anarchy-repo/
+/work/
+/out/
+/airootfs/opt/arch-offline-repo/
+/airootfs/opt/dotfiles/
+/.dotfiles-commit
